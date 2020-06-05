@@ -1,0 +1,24 @@
+{
+   "_id": "installed-quant-assets-endpoint",
+   "type": "pipe",
+   "source": {
+     "type": "dataset",
+     "dataset": "installed-quant-assets"
+   },
+   "transform": {
+     "type": "dtl",
+     "rules": {
+       "default": [
+         ["filter",
+           ["neq", "_S._deleted", true]
+         ],
+         ["copy", "*", "_*"]
+       ]
+     }
+   },
+   "metadata": {
+     "tags": ["aosjekk"],
+     "$config-group": "maintenance"
+   },
+   "remove_namespaces": true
+ }

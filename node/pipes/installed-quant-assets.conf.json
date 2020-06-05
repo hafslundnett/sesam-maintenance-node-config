@@ -1,0 +1,85 @@
+{
+   "_id": "installed-quant-assets",
+   "type": "pipe",
+   "source": {
+     "type": "dataset",
+     "dataset": "global-meterpoint"
+   },
+   "transform": {
+     "type": "dtl",
+     "rules": {
+       "default": [
+         ["filter",
+           ["and",
+             ["in",
+               ["list",
+                 ["ni", "quant:Meterpoint"],
+                 ["ni", "quant:Communicationpoint"],
+                 ["ni", "ifs:Equipment-functional"],
+                 ["ni", "geonis:Meterpoint"]
+               ], "_S.rdf:type"],
+             ["is-not-null", "_S.quant-meterpoint:meterpointid"]
+           ]
+         ],
+         ["add", "_id", "_S.quant-meterpoint:meterpointid"],
+         ["add", "installed_assets",
+           ["apply-hops", "meter", {
+             "datasets": ["global-asset ga"],
+             "where": ["eq", "_S.$ids", "ga.quant-asset:communicationpoint_id-ni"]
+           }]
+         ],
+         ["add", "innbound_antenna",
+           ["first",
+             ["apply-hops", "antenna", {
+               "datasets": ["global-asset ga", "global-classification gc"],
+               "where": [
+                 ["eq", "_S.quant-communicationpoint:inboundantenna_id-ni", "ga.$ids"],
+                 ["eq", "ga.quant-antennainstallation:model_id-ni", "gc.$ids"]
+               ]
+             }]
+           ]
+         ],
+         ["add", "outbound_antenna",
+           ["first",
+             ["apply-hops", "antenna", {
+               "datasets": ["global-asset ga", "global-classification gc"],
+               "where": [
+                 ["eq", "_S.quant-communicationpoint:outboundantenna_id-ni", "ga.$ids"],
+                 ["eq", "ga.quant-antennainstallation:model_id-ni", "gc.$ids"]
+               ]
+             }]
+           ]
+         ],
+         ["add", "deliveryprofile",
+           ["first",
+             ["hops", {
+               "datasets": ["global-classification gc"],
+               "where": ["eq", "_S.quant-meterpoint:deliveryprofile_id-ni", "gc.$ids"],
+               "return": "gc.name"
+             }]
+           ]
+         ],
+         ["add", "settlementmethod", "_S.quant-meterpoint:settlement_method"]
+       ],
+       "antenna": [
+         ["add", "model", "_S.quant-assetmodel:manufacturermodelname"],
+         ["add", "description", "_S.quant-assetmodel:description"],
+         ["add", "manufacturer", "_S.quant-assetmodel:manufacturer"]
+       ],
+       "meter": [
+         ["filter",
+           ["in",
+             ["ni", "quant:Asset"], "_S.rdf:type"]
+         ],
+         ["add", "state", "_S.quant-asset:state"],
+         ["add", "serialnumber", "_S.quant-asset:serialnumber"],
+         ["add", "dtype", "_S.quant-asset:dtype"],
+         ["add", "part", "_S.ifs-part-serial-catalog:part_no"]
+       ]
+     }
+   },
+   "metadata": {
+     "tags": ["aosjekk"],
+     "$config-group": "maintenance"
+   }
+ }

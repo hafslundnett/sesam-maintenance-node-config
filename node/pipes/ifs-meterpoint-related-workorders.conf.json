@@ -1,0 +1,131 @@
+{
+   "_id": "ifs-meterpoint-related-workorders",
+   "type": "pipe",
+   "source": {
+     "type": "dataset",
+     "dataset": "global-meterpoint",
+     "subset": ["eq", "_S.rdf:type", "~:ifs:Equipment-functional"]
+   },
+   "transform": [{
+     "type": "dtl",
+     "rules": {
+       "default": [
+         ["filter",
+           ["and",
+             ["in",
+               ["ni", "ifs:Equipment-functional"], "_S.rdf:type"],
+             ["is-not-null", "_S.ifs-equipment-functional:mch_code"]
+           ]
+         ],
+         ["add", "_id",
+           ["string", "_S.ifs-equipment-functional:mch_code"]
+         ],
+         ["add", "workorders",
+           ["distinct",
+             ["combine",
+               ["apply-hops", "wos", {
+                 "datasets": ["global-workorder gw"],
+                 "where": ["eq", "_S.$ids", "gw.ifs-workorder:mch_code-ni"],
+                 "prefilters": {
+                   "gw": ["eq", "_S.rdf:type", "~:ifs:Workorder"]
+                 }
+               }],
+               ["apply-hops", "wos", {
+                 "datasets": ["global-workorder gw"],
+                 "where": ["eq", "_S.ifs-equipment-functional:mch_code", "gw.wms-case-info:installation_id"],
+                 "prefilters": {
+                   "gw": ["eq", "_S.rdf:type", "~:wms:Caseinfo"]
+                 }
+               }],
+               ["apply-hops", "wos", {
+                 "datasets": ["global-workorder gw"],
+                 "where": ["eq", "_S.$ids", "gw.elsmart-workorder:geonis-anlegg-ni"],
+                 "prefilters": {
+                   "gw": ["eq", "_S.rdf:type", "~:elsmart:Workorder"]
+                 }
+               }],
+               ["apply-hops", "wos", {
+                 "datasets": ["global-workorder gw"],
+                 "where": ["eq", "_S.$ids", "gw.elsmart-workorder:installation-ni"],
+                 "prefilters": {
+                   "gw": ["eq", "_S.rdf:type", "~:elsmart:Workorder"]
+                 }
+               }],
+               ["apply-hops", "wos", {
+                 "datasets": ["global-workorder gw"],
+                 "where": ["eq", "_S.$ids", "gw.quant-workorder:communicationpointid-ni"],
+                 "prefilters": {
+                   "gw": ["eq", "_S.rdf:type", "~:quant:Workorder"]
+                 }
+               }]
+             ]
+           ]
+         ]
+       ],
+       "wos": [
+         ["add", "meterpointid", "_P._S.ifs-equipment-functional:mch_code"],
+         ["add", "ifs_workorder", "_S.ifs-workorder:wo_no"],
+         ["add", "elsmart_workorder", "_S.elsmart-workorder:external-id"],
+         ["add", "quant_workorder", "_S.quant-workorder:id"],
+         ["add", "ifs_status", "_S.ifs-workorder:wo_status_id"],
+         ["add", "ifs_wo_type", "_S.ifs-workorder:work_type_id"],
+         ["add", "ifs_op_status", "_S.ifs-workorder:op_status_id"],
+         ["add", "wms_case_id", "_S.wms-case-info:case_id"],
+         ["add", "wms_case_status_id", "_S.wms-case-info:status_id"],
+         ["add", "wms_case_external_workorder_id", "_S.wms-caseinfo-extended:external_workorder_id"],
+         ["add", "wms_case_type", "_S.wms-case-info:case_type_id"],
+         ["if",
+           ["is-not-null", "_S.wms-case-info:case_type_id"],
+           ["filter",
+             ["in", "_S.wms-case-info:case_type_id",
+               ["list", 157, 160, 503, 162]
+             ]
+           ]
+         ],
+         ["add", "wms_case_status",
+           ["first",
+             ["hops", {
+               "datasets": ["global-classification gc"],
+               "where": ["eq", "_S.wms-case-info:status_id-ni", "gc.$ids"],
+               "return": "gc.wms-case-status:status_name"
+             }]
+           ]
+         ],
+         ["add", "installation_date", "_S.global-workorder:ifs-workorder-installation_date"],
+         ["add", "elsmart_status",
+           ["coalesce",
+             ["list",
+               ["first",
+                 ["hops", {
+                   "datasets": ["global-classification gc"],
+                   "where": ["eq", "_S.elsmart-workorderstatus:WorkOrderStatus-ni", "gc.$ids"],
+                   "return": "gc.map-elsmart-workorderstatuscode:status",
+                   "track-dependencies": "$ENV(dependency)"
+                 }]
+               ],
+               ["first",
+                 ["hops", {
+                   "datasets": ["global-classification gc"],
+                   "where": ["eq",
+                     ["ni", "map-elsmart-workorderstatuscode",
+                       ["string", "_S.elsmart-workorder:OrderDetails.elsmart-workorder:OrderStatus"]
+                     ], "gc.$ids"],
+                   "return": "gc.map-elsmart-workorderstatuscode:status",
+                   "track-dependencies": "$ENV(dependency)"
+                 }]
+               ]
+             ]
+           ]
+         ]
+       ]
+     }
+   }],
+   "pump": {
+     "schedule_interval": 60
+   },
+   "metadata": {
+     "tags": ["aosjekk"],
+     "$config-group": "maintenance"
+   },
+   "remove_namespaces": true
+ }
