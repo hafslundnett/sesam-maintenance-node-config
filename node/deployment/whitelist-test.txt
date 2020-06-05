@@ -1,0 +1,5 @@
+pipes/ifs-meterpoint-related-workorders.conf.json
+pipes/installed-quant-assets-endpoint.conf.json
+pipes/installed-quant-assets.conf.json
+pipes/installed-quant-communicationpoint-assets.conf.json
+pipes/workorder-aosjekk.conf.json
