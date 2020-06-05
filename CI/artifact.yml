@@ -1,0 +1,34 @@
+
+# branch is defined in Azure-pipeline variables
+trigger:
+  branches:
+    include:
+    - '$(branch)'
+  paths:
+    include:
+    - node/*
+
+# Disable Github PR
+pr: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: echo 'Cloning sesam-maintenance-node-confg:$(branch)'
+  displayName: 'Cloning sesam-maintenance-node-confg:$(branch)'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(agent.builddirectory)'
+    Contents: '**'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+    CleanTargetFolder: true
+  displayName: 'Copy sesam_config files'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: '$(artifact_name)'
+    publishLocation: 'Container'
+  displayName: 'Build sesam_config artifact'
