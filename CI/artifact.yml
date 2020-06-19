@@ -4,9 +4,6 @@ trigger:
   branches:
     include:
     - '$(branch)'
-  paths:
-    include:
-    - node/*
 
 # Disable Github PR
 pr: none
