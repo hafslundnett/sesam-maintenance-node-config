@@ -1,0 +1,65 @@
+{
+	"_id": "debug-customeraccept-id-bug-el-ao",
+	"type": "pipe",
+	"source":
+	{
+		"type": "dataset",
+		"dataset": "debug-customeraccept-id-bug"
+	},
+	"transform": [
+	{
+		"type": "dtl",
+		"rules":
+		{
+			"default": [
+				["filter",
+					["and",
+						["is-empty", "_S.debug-customeraccept-id-bug:AO-groups.7"],
+						["is-not-empty", "_S.debug-customeraccept-id-bug:AO-groups.32"],
+						["or",
+							["is-empty", "_S.debug-customeraccept-id-bug:AO-groups.0"],
+							["eq", "",
+								["first", "_S.debug-customeraccept-id-bug:AO-groups.0"]
+							]
+						]
+					]
+				],
+				["copy", "*"],
+				["add", "el-AO",
+					["first", "_S.debug-customeraccept-id-bug:AO-groups.32"]
+				]
+			]
+		}
+	},
+	{
+		"type": "dtl",
+		"rules":
+		{
+			"default": [
+				["add", "IFS-AO",
+					["string",
+						["first",
+							["hops",
+							{
+								"datasets": ["global-workorder gw"],
+								"where": ["eq",
+									"gw.$ids",
+									["ni", "elsmart-workorder", "_S.el-AO"]
+								],
+								"return": "gw.ifs-workorder:wo_no"
+							}]
+						]
+					]
+				],
+				["copy", "*"]
+			]
+		}
+	}],
+	"metadata":
+	{
+		"$config-group": "maintenance",
+		"tags": ["kortbetaling",
+			"backup",
+			"Eivind"]
+	}
+}
