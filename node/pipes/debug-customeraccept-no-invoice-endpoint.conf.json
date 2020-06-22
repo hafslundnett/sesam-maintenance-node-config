@@ -22,7 +22,7 @@
 	},
 	"metadata":
 	{
-		"$config-group": ["maintenance"],
+		"$config-group": "maintenance",
 		"tags": ["kortbetaling",
 			"backup",
 			"Eivind"]
