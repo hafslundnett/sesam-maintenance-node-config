@@ -1,0 +1,33 @@
+{
+	"_id": "debug-customeraccept-id-bug-no-ao-endpoint",
+	"type": "pipe",
+	"source":
+	{
+		"type": "dataset",
+		"dataset": "debug-customeraccept-id-bug-no-ao"
+	},
+	"sink":
+	{
+		"type": "http_endpoint"
+	},
+	"transform":
+	{
+		"type": "dtl",
+		"rules":
+		{
+			"default": [
+				["filter",
+					["neq", "_S._deleted", true]
+				],
+				["copy", "elsmart-invoice-noprefix"]
+			]
+		}
+	},
+	"metadata":
+	{
+		"$config-group": "maintenance",
+		"tags": ["kortbetaling",
+			"backup",
+			"Eivind"]
+	}
+}
