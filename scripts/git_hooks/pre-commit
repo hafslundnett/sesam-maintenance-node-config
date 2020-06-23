@@ -1,0 +1,144 @@
+#!/usr/bin/env bash
+
+unset GIT_DIR
+
+# get state
+git_root=$(git rev-parse --show-toplevel)
+node_root=$git_root/node
+staged_files=$(git diff --name-only --staged --diff-filter=d)
+added_conf_json_files=$(git diff --name-only --no-renames --staged --diff-filter=A | grep "conf.json")
+deleted_conf_json_files=$(git diff --name-only --no-renames --staged --diff-filter=D | grep "conf.json")
+
+# hack to let users have .syncconfig in git root or inside node dir
+if [ -e $node_root/.syncconfig ];then
+    source $node_root/.syncconfig
+elif [ -e $git_root/.syncconfig ];then
+    source $git_root/.syncconfig
+else
+    printf "\033[0;31mGIT-HOOK:\n\tNo .syncconfig found.\n\tTo commit without validation, use 'git commit --no-verify'\033[0m\n"
+    exit 1
+fi
+JWT=${JWT/[Bb]earer /}
+if [ -z ${NODE_URL+x} ] && [ -n "$NODE" ];then
+    NODE_URL="https://$NODE/api"
+fi
+
+if [ $? -ne 0 ];then
+   exit 1
+fi
+
+##################################################################################
+###### automatic whitelist maintenance######
+cd $node_root
+
+#stop if any whitelist file is among the unstaged files
+unstaged_whitelist_count=`git diff --name-only deployment/whitelist-* | wc -l`
+if [ $unstaged_whitelist_count -gt 0 ];then
+  printf "\033[0;31mGIT-HOOK:\n\tChages to whitelists must be staged or reset!\033[0m\n"
+  exit 1
+fi
+
+function is_whitelist_candidate()
+{
+  echo "$1" | grep -iqE '^((pipes|systems).*|node-metadata).conf.json'
+  return $?
+}
+
+# Update whitelists after newly added configs
+for file in $added_conf_json_files;do
+  wl_item=`echo $file | sed 's/node\///'`
+  if is_whitelist_candidate $wl_item;then
+    for wl in `ls deployment/whitelist-*.txt`;do
+      echo $wl_item >> $wl
+    done;
+  fi
+done;
+
+# Update whitelists after newly deleted configs
+for file in $deleted_conf_json_files;do
+  wl_item=`echo $file | sed 's/node\///'`
+  if is_whitelist_candidate $wl_item;then
+    for wl in `ls deployment/whitelist-*.txt`;do
+      sed -i '\#'"$wl_item"'#d' $wl
+    done;
+  fi
+done;
+
+# sort and deduplicate whitelists
+for wl in `ls deployment/whitelist-*.txt`;do
+  sort -d $wl | uniq > $wl.tmp && mv $wl.tmp $wl
+done;
+
+# if whitelist-master has a diff and it is not fully updated after added/removed configs, notify user
+#git --no-pager diff --exit-code deployment/whitelist-master.txt &> /dev/null
+#
+#if [ "$?" -ne "0" ];then
+#    new_files=$(git --no-pager diff -U0 --exit-code deployment/whitelist-master.txt | egrep '^\+[^+]' | cut -d '+' -f 2)
+#    for file in $new_files;do
+#        if [[ "${staged_files[@]}" =~ "$file" ]] && [[ ! "${staged_files[@]}" =~ "deployment/whitelist-master.txt" ]];then
+#            printf "\033[0;31mGIT-HOOK: \n\twhitelists are auto-updated after your changes!\n\tPlease verify whitelists and stage them\033[0m\n"
+#            exit 1
+#        fi
+#    done
+#fi
+##################################################################################
+###### Validate all json files to avoid trailing commas and such #################
+cd $git_root
+
+function is_valid_json()
+{
+  python3 -m json.tool $1 &> /dev/null
+  if [ $? -ne 0 ];then
+      return 0
+  fi
+  return 1
+}
+
+for file in ${staged_files};do
+    if [[ ${file} == *.json ]];then
+        is_valid_json ${file} "${file}.pretty --sort-keys"
+        if [ $? -ne 1 ];then
+          invalid_json_files="$invalid_json_files\n\t\t${file}"
+        fi
+    fi
+done
+if [[ -n $invalid_json_files ]]; then
+    printf "\033[0;31mGIT-HOOK: \n\tinvalid json files found: \t$invalid_json_files\n"
+    exit 1
+fi
+for file in ${staged_files};do
+  if [[ ${file} == node/variables/variables*.json ]];then
+    python3 -m json.tool ${file} ${file}.pretty --sort-keys &> /dev/null
+    mv ${file}.pretty ${file}
+    git add ${file}
+  fi
+done
+##################################################################################
+###### Check staged files against config-format endpoint #########################
+
+function format_file()
+{
+  file=$1
+  resp=$(curl -H "Content-type: application/json" -H "Authorization: bearer $JWT" \
+              -X POST "$NODE_URL/utils/reformat-config" -d @$file \
+              --write-out %{http_code} --silent --output $file.tmp)
+  if [ $resp -ne "200" ]; then
+    printf "\033[0;31mGIT-HOOK: \n\tReformat request failed. \n\tTo override validation, use 'git commit --no-verify'\033[0m\n" >&2
+    if [ -e $file.tmp ];then
+        cat $file.tmp >&2
+        rm $file.tmp
+    fi
+    exit 1
+  else
+    mv $file.tmp $file
+  fi
+}
+
+for file in $staged_files;do
+    if [[ $file == *.conf.json ]];then
+        format_file $file
+        git add $file
+    fi
+done
+
+##################################################################################

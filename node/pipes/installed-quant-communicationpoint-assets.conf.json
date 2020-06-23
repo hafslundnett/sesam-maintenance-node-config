@@ -1,79 +1,79 @@
 {
-   "_id": "installed-quant-communicationpoint-assets",
-   "type": "pipe",
-   "source": {
-     "type": "dataset",
-     "dataset": "global-grid"
-   },
-   "transform": {
-     "type": "dtl",
-     "rules": {
-       "default": [
-         ["filter",
-           ["and",
-             ["in",
-               ["list",
-                 ["ni", "quant:Communicationpoint"],
-                 ["ni", "ifs:Equipment-functional"]
-               ], "_S.rdf:type"],
-             ["is-not-null", "_S.quant-communicationpoint:communicationpoint_id"],
-             ["eq", "_S.quant-communicationpoint:dtype", "CON"]
-           ]
-         ],
-         ["add", "_id", "_S.quant-communicationpoint:communicationpoint_id"],
-         ["add", "installed_assets",
-           ["apply-hops", "meter", {
-             "datasets": ["global-asset ga"],
-             "where": ["eq", "_S.$ids", "ga.quant-asset:communicationpoint_id-ni"]
-           }]
-         ],
-         ["add", "innbound_antenna",
-           ["first",
-             ["apply-hops", "antenna", {
-               "datasets": ["global-asset ga", "global-classification gc"],
-               "where": [
-                 ["eq", "_S.quant-communicationpoint:inboundantenna_id-ni", "ga.$ids"],
-                 ["eq", "ga.quant-antennainstallation:model_id-ni", "gc.$ids"]
-               ]
-             }]
-           ]
-         ],
-         ["add", "outbound_antenna",
-           ["first",
-             ["apply-hops", "antenna", {
-               "datasets": ["global-asset ga", "global-classification gc"],
-               "where": [
-                 ["eq", "_S.quant-communicationpoint:outboundantenna_id-ni", "ga.$ids"],
-                 ["eq", "ga.quant-antennainstallation:model_id-ni", "gc.$ids"]
-               ]
-             }]
-           ]
-         ]
-       ],
-       "antenna": [
-         ["add", "model", "_S.quant-assetmodel:manufacturermodelname"],
-         ["add", "description", "_S.quant-assetmodel:description"],
-         ["add", "manufacturer", "_S.quant-assetmodel:manufacturer"]
-       ],
-       "meter": [
-         ["filter",
-           ["in",
-             ["ni", "quant:Asset"], "_S.rdf:type"]
-         ],
-         ["add", "state", "_S.quant-asset:state"],
-         ["add", "serialnumber", "_S.quant-asset:serialnumber"],
-         ["add", "dtype", "_S.quant-asset:dtype"],
-         ["add", "part", "_S.ifs-part-serial-catalog:part_no"],
-         ["add", "quant_model", "_S.quant-asset:model_name"]
-       ]
-     }
-   },
-   "pump": {
-     "rescan_cron_expression": "0 19 * * ?"
-   },
-   "metadata": {
-     "tags": ["aosjekk"],
-     "$config-group": "maintenance"
-   },
-   "remove_namespaces": true
- }
+  "_id": "installed-quant-communicationpoint-assets",
+  "type": "pipe",
+  "source": {
+    "type": "dataset",
+    "dataset": "global-grid"
+  },
+  "transform": {
+    "type": "dtl",
+    "rules": {
+      "default": [
+        ["filter",
+          ["and",
+            ["in",
+              ["list",
+                ["ni", "quant:Communicationpoint"],
+                ["ni", "ifs:Equipment-functional"]
+              ], "_S.rdf:type"],
+            ["is-not-null", "_S.quant-communicationpoint:communicationpoint_id"],
+            ["eq", "_S.quant-communicationpoint:dtype", "CON"]
+          ]
+        ],
+        ["add", "_id", "_S.quant-communicationpoint:communicationpoint_id"],
+        ["add", "installed_assets",
+          ["apply-hops", "meter", {
+            "datasets": ["global-asset ga"],
+            "where": ["eq", "_S.$ids", "ga.quant-asset:communicationpoint_id-ni"]
+          }]
+        ],
+        ["add", "innbound_antenna",
+          ["first",
+            ["apply-hops", "antenna", {
+              "datasets": ["global-asset ga", "global-classification gc"],
+              "where": [
+                ["eq", "_S.quant-communicationpoint:inboundantenna_id-ni", "ga.$ids"],
+                ["eq", "ga.quant-antennainstallation:model_id-ni", "gc.$ids"]
+              ]
+            }]
+          ]
+        ],
+        ["add", "outbound_antenna",
+          ["first",
+            ["apply-hops", "antenna", {
+              "datasets": ["global-asset ga", "global-classification gc"],
+              "where": [
+                ["eq", "_S.quant-communicationpoint:outboundantenna_id-ni", "ga.$ids"],
+                ["eq", "ga.quant-antennainstallation:model_id-ni", "gc.$ids"]
+              ]
+            }]
+          ]
+        ]
+      ],
+      "antenna": [
+        ["add", "model", "_S.quant-assetmodel:manufacturermodelname"],
+        ["add", "description", "_S.quant-assetmodel:description"],
+        ["add", "manufacturer", "_S.quant-assetmodel:manufacturer"]
+      ],
+      "meter": [
+        ["filter",
+          ["in",
+            ["ni", "quant:Asset"], "_S.rdf:type"]
+        ],
+        ["add", "state", "_S.quant-asset:state"],
+        ["add", "serialnumber", "_S.quant-asset:serialnumber"],
+        ["add", "dtype", "_S.quant-asset:dtype"],
+        ["add", "part", "_S.ifs-part-serial-catalog:part_no"],
+        ["add", "quant_model", "_S.quant-asset:model_name"]
+      ]
+    }
+  },
+  "pump": {
+    "rescan_cron_expression": "0 19 * * ?"
+  },
+  "metadata": {
+    "$config-group": "maintenance",
+    "tags": ["aosjekk"]
+  },
+  "remove_namespaces": true
+}
