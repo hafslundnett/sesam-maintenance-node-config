@@ -1,30 +1,23 @@
 {
-	"_id": "debug-customeraccept-no-invoice-endpoint",
-	"type": "pipe",
-	"source":
-	{
-		"type": "dataset",
-		"dataset": "debug-customeraccept-no-invoice"
-	},
-	"sink":
-	{
-		"type": "http_endpoint"
-	},
-	"transform":
-	{
-		"type": "dtl",
-		"rules":
-		{
-			"default": [
-				["copy", "elsmart-invoice-noprefix", "_*"]
-			]
-		}
-	},
-	"metadata":
-	{
-		"$config-group": "maintenance",
-		"tags": ["kortbetaling",
-			"backup",
-			"Eivind"]
-	}
+  "_id": "debug-customeraccept-no-invoice-endpoint",
+  "type": "pipe",
+  "source": {
+    "type": "dataset",
+    "dataset": "debug-customeraccept-no-invoice"
+  },
+  "sink": {
+    "type": "http_endpoint"
+  },
+  "transform": {
+    "type": "dtl",
+    "rules": {
+      "default": [
+        ["copy", "elsmart-invoice-noprefix", "_*"]
+      ]
+    }
+  },
+  "metadata": {
+    "$config-group": "maintenance",
+    "tags": ["kortbetaling", "backup", "Eivind"]
+  }
 }

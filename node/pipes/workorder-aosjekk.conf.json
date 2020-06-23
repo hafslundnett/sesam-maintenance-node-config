@@ -1,225 +1,225 @@
 {
-   "_id": "workorder-aosjekk",
-   "type": "pipe",
-   "source": {
-     "type": "dataset",
-     "dataset": "global-workorder"
-   },
-   "sink": {
-     "indexes": "$ids"
-   },
-   "transform": [{
-     "type": "dtl",
-     "rules": {
-       "default": [
-         ["filter",
-           ["intersects",
-             ["list",
-               ["ni", "elsmart:Workorder"],
-               ["ni", "ifs:Workorder"]
-             ], "_S.rdf:type"]
-         ],
-         ["add", "wo_no", "_S.ifs-workorder:wo_no"],
-         ["add", "mp",
-           ["coalesce",
-             ["list", "_S.ifs-workorder:mch_code", "_S.elsmart-workorder:OrderDetails.elsmart-workorder:ServiceOrder.elsmart-workorder:Installation.elsmart-workorder:InstallationID"]
-           ]
-         ],
-         ["add", "quadrantsreading",
-           ["apply", "quadrantsreading", "_S."]
-         ],
-         ["add", "wo_active", "_S.global-workorder:sesam-active-wo"],
-         ["add", "operational_status", "_S.ifs-workorder:op_status_id"],
-         ["add", "workorder_extra", "_S.ifs-workorder-extra:type"],
-         ["add", "wo_type", "_S.ifs-workorder:work_type_id"],
-         ["add", "wo_state", "_S.ifs-workorder:wo_status_id"],
-         ["add", "org_code", "_S.ifs-workorder:org_code"],
-         ["add", "installation_date", "_S.global-workorder:ifs-workorder-installation_date"],
-         ["add", "hasReservedTransformer", "_S.global-workorder:HasReservedTransformer"],
-         ["add", "elsmart_wo_order_type", "_S.elsmart-workorder:OrderDetails.elsmart-workorder:OrderType"],
-         ["add", "elsmart_workorder", "_S.elsmart-workorder:id"],
-         ["add", "wms_case",
-           ["first",
-             ["apply-hops", "wms_case", {
-               "datasets": ["global-classification gc"],
-               "where": ["eq", "_S.wms-case-info:status_id-ni", "gc.$ids"],
-               "track-dependencies": "$ENV(dependency)"
-             }]
-           ]
-         ],
-         ["if",
-           ["is-null", "_T.wms_case"],
-           ["add", "wms_case",
-             ["dict"]
-           ]
-         ],
-         ["add", "antenna_attributes",
-           ["coalesce",
-             ["list",
-               ["apply", "antenna_attributes", "_S.ifs-workorder:roles"],
-               ["list"]
-             ]
-           ]
-         ],
-         ["add", "workorder_extra_description",
-           ["first",
-             ["hops", {
-               "datasets": ["global-classification gc"],
-               "where": [
-                 ["eq", "_S.ifs-workorder-extra:type-ni", "gc.$ids"]
-               ],
-               "return": "gc.map-workorder-extra-type:description"
-             }]
-           ]
-         ],
-         ["add", "tmp_part_serial_history",
-           ["flatten",
-             ["values",
-               ["apply", "part_serial_history", "_S."]
-             ]
-           ]
-         ],
-         ["merge",
-           ["apply-hops", "mp", {
-             "datasets": ["global-meterpoint gm"],
-             "where": [
-               ["eq", "_S.ifs-workorder:mch_code-ni", "gm.$ids"]
-             ]
-           }]
-         ],
-         ["add", "quant_annualload",
-           ["apply-hops", "annualload", {
-             "datasets": ["global-meterpoint gm"],
-             "where": [
-               ["eq", "_S.ifs-workorder:mch_code", "gm.quant-annualload-view:meterpointid"]
-             ]
-           }]
-         ],
-         ["add", "$ids",
-           ["combine",
-             ["ni", "_S._id"],
-             ["ni", "_S.elsmart-workorder:id"]
-           ]
-         ]
-       ],
-       "annualload": [
-         ["filter",
-           ["is-not-null", "_S.annual_load"]
-         ],
-         ["copy", "*",
-           ["list", "_*", "$ids"]
-         ]
-       ],
-       "antenna_attributes": [
-         ["filter",
-           ["intersects", "_S.ifs-workorder-role:c_column02",
-             ["list", "12.MP.MP051", "12.MP.MP115", "12.ET.002"]
-           ]
-         ],
-         ["add", "type", "_S.ifs-workorder-role:c_column05"],
-         ["add", "model", "_S.ifs-workorder-role:c_column07"]
-       ],
-       "mp": [
-         ["add", "quant_settlement_method", "_S.quant-meterpoint:settlement_method"],
-         ["add", "amm_status", "_S.wms-installation:amm_status"],
-         ["add", "wms_meter", "_S.wms-installation:meterno"],
-         ["add", "quant_communicationpoint_state", "_S.quant-communicationpoint:state"],
-         ["add", "quant_meterpoint_state", "_S.quant-meterpoint:state"],
-         ["add", "quant_communicationpoint_state", "_S.quant-communicationpoint:state"],
-         ["add", "quant_transformationratio_serial",
-           ["first",
-             ["hops", {
-               "datasets": ["global-grid gg"],
-               "where": [
-                 ["eq",
-                   ["ni",
-                     ["concat", "quant-transformationratio:",
-                       ["string", "_S.quant-communicationpoint:id"]
-                     ]
-                   ], "gg.$ids"]
-               ],
-               "return": "gg.quant-transformationratio:serialnumber"
-             }]
-           ]
-         ]
-       ],
-       "part_serial_history": [
-         ["copy", "global-workorder:partserialhistory_*"]
-       ],
-       "quadrantsreading": [
-         ["copy", "ifs-quadrantsreading:*"]
-       ],
-       "wms_case": [
-         ["add", "case_id", "_P._S.wms-case-info:case_id"],
-         ["add", "status_id", "_P._S.wms-case-info:status_id"],
-         ["add", "case_type_id", "_P._S.wms-case-info:case_type_id"],
-         ["add", "counters", "_P._S.wms-case-info:counters.wms-case-counter-info:counter_code"],
-         ["add", "errors",
-           ["apply", "wms_case_timestamp", "_P._S.wms-case-info:timestamps"]
-         ],
-         ["add", "status_description", "_S.wms-case-status:status_name"]
-       ],
-       "wms_case_timestamp": [
-         ["filter",
-           ["intersects", "_S.wms-case-timestamp:timestamp_id",
-             ["list", 852, 849, 850]
-           ]
-         ],
-         ["add", "type_id", "_S.wms-case-timestamp:timestamp_id"],
-         ["add", "type",
-           ["case-eq", "_S.wms-case-timestamp:timestamp_id", 852, "logical error", 849, "cab error", 850, "generis error"]
-         ],
-         ["add", "description", "_S.wms-case-timestamp:timestamp_comment"]
-       ]
-     }
-   }, {
-     "type": "dtl",
-     "rules": {
-       "default": [
-         ["copy", "*"],
-         ["add", "part_serial_history",
-           ["apply-hops", "asset_state", {
-             "datasets": ["global-asset ga"],
-             "where": [
-               ["eq", "_S.tmp_part_serial_history", "ga.$ids"]
-             ]
-           }]
-         ],
-         ["remove", "tmp_*"]
-       ],
-       "asset_state": [
-         ["add", "serial_no", "_S.ifs-part-serial-history:serial_no"],
-         ["add", "part_no", "_S.ifs-part-serial-history:part_no"],
-         ["add", "part_main_group",
-           ["first",
-             ["hops", {
-               "datasets": ["global-asset ga"],
-               "where": [
-                 ["eq", "_S.ifs-part-serial-history:part_no-ni", "ga.$ids"]
-               ],
-               "return": "ga.ifs-part-catalog:part_main_group"
-             }]
-           ]
-         ],
-         ["add", "type",
-           ["if",
-             ["and",
-               ["in",
-                 ["ni", "ifs:Part-serial-history"], "_S.rdf:type"],
-               ["eq", "_S.ifs-part-serial-history:order_type_db", "WORK ORDER"],
-               ["eq", "_S.ifs-part-serial-history:current_position_db", "InInventory"],
-               ["is-not-null", "_S.ifs-part-serial-history:superior_alternate_id"]
-             ],
-             ["case-eq", "_T.part_main_group", "C", "uninstalled_currenttransformer", "V", "uninstalled_voltagetransformer", "K", "uninstalled_concentrator", "I", "uninstalled_IM_meter", "D", "uninstalled_DM_meter"],
-             ["case-eq", "_T.part_main_group", "C", "installed_currenttransformer", "V", "installed_voltagetransformer", "K", "installed_concentrator", "I", "installed_IM_meter", "D", "installed_DM_meter"]
-           ]
-         ]
-       ]
-     }
-   }],
-   "metadata": {
-     "tags": ["aosjekk"],
-     "$config-group": "maintenance"
-   },
-   "remove_namespaces": true
- }
+  "_id": "workorder-aosjekk",
+  "type": "pipe",
+  "source": {
+    "type": "dataset",
+    "dataset": "global-workorder"
+  },
+  "sink": {
+    "indexes": "$ids"
+  },
+  "transform": [{
+    "type": "dtl",
+    "rules": {
+      "default": [
+        ["filter",
+          ["intersects",
+            ["list",
+              ["ni", "elsmart:Workorder"],
+              ["ni", "ifs:Workorder"]
+            ], "_S.rdf:type"]
+        ],
+        ["add", "wo_no", "_S.ifs-workorder:wo_no"],
+        ["add", "mp",
+          ["coalesce",
+            ["list", "_S.ifs-workorder:mch_code", "_S.elsmart-workorder:OrderDetails.elsmart-workorder:ServiceOrder.elsmart-workorder:Installation.elsmart-workorder:InstallationID"]
+          ]
+        ],
+        ["add", "quadrantsreading",
+          ["apply", "quadrantsreading", "_S."]
+        ],
+        ["add", "wo_active", "_S.global-workorder:sesam-active-wo"],
+        ["add", "operational_status", "_S.ifs-workorder:op_status_id"],
+        ["add", "workorder_extra", "_S.ifs-workorder-extra:type"],
+        ["add", "wo_type", "_S.ifs-workorder:work_type_id"],
+        ["add", "wo_state", "_S.ifs-workorder:wo_status_id"],
+        ["add", "org_code", "_S.ifs-workorder:org_code"],
+        ["add", "installation_date", "_S.global-workorder:ifs-workorder-installation_date"],
+        ["add", "hasReservedTransformer", "_S.global-workorder:HasReservedTransformer"],
+        ["add", "elsmart_wo_order_type", "_S.elsmart-workorder:OrderDetails.elsmart-workorder:OrderType"],
+        ["add", "elsmart_workorder", "_S.elsmart-workorder:id"],
+        ["add", "wms_case",
+          ["first",
+            ["apply-hops", "wms_case", {
+              "datasets": ["global-classification gc"],
+              "where": ["eq", "_S.wms-case-info:status_id-ni", "gc.$ids"],
+              "track-dependencies": "$ENV(dependency)"
+            }]
+          ]
+        ],
+        ["if",
+          ["is-null", "_T.wms_case"],
+          ["add", "wms_case",
+            ["dict"]
+          ]
+        ],
+        ["add", "antenna_attributes",
+          ["coalesce",
+            ["list",
+              ["apply", "antenna_attributes", "_S.ifs-workorder:roles"],
+              ["list"]
+            ]
+          ]
+        ],
+        ["add", "workorder_extra_description",
+          ["first",
+            ["hops", {
+              "datasets": ["global-classification gc"],
+              "where": [
+                ["eq", "_S.ifs-workorder-extra:type-ni", "gc.$ids"]
+              ],
+              "return": "gc.map-workorder-extra-type:description"
+            }]
+          ]
+        ],
+        ["add", "tmp_part_serial_history",
+          ["flatten",
+            ["values",
+              ["apply", "part_serial_history", "_S."]
+            ]
+          ]
+        ],
+        ["merge",
+          ["apply-hops", "mp", {
+            "datasets": ["global-meterpoint gm"],
+            "where": [
+              ["eq", "_S.ifs-workorder:mch_code-ni", "gm.$ids"]
+            ]
+          }]
+        ],
+        ["add", "quant_annualload",
+          ["apply-hops", "annualload", {
+            "datasets": ["global-meterpoint gm"],
+            "where": [
+              ["eq", "_S.ifs-workorder:mch_code", "gm.quant-annualload-view:meterpointid"]
+            ]
+          }]
+        ],
+        ["add", "$ids",
+          ["combine",
+            ["ni", "_S._id"],
+            ["ni", "_S.elsmart-workorder:id"]
+          ]
+        ]
+      ],
+      "annualload": [
+        ["filter",
+          ["is-not-null", "_S.annual_load"]
+        ],
+        ["copy", "*",
+          ["list", "_*", "$ids"]
+        ]
+      ],
+      "antenna_attributes": [
+        ["filter",
+          ["intersects", "_S.ifs-workorder-role:c_column02",
+            ["list", "12.MP.MP051", "12.MP.MP115", "12.ET.002"]
+          ]
+        ],
+        ["add", "type", "_S.ifs-workorder-role:c_column05"],
+        ["add", "model", "_S.ifs-workorder-role:c_column07"]
+      ],
+      "mp": [
+        ["add", "quant_settlement_method", "_S.quant-meterpoint:settlement_method"],
+        ["add", "amm_status", "_S.wms-installation:amm_status"],
+        ["add", "wms_meter", "_S.wms-installation:meterno"],
+        ["add", "quant_communicationpoint_state", "_S.quant-communicationpoint:state"],
+        ["add", "quant_meterpoint_state", "_S.quant-meterpoint:state"],
+        ["add", "quant_communicationpoint_state", "_S.quant-communicationpoint:state"],
+        ["add", "quant_transformationratio_serial",
+          ["first",
+            ["hops", {
+              "datasets": ["global-grid gg"],
+              "where": [
+                ["eq",
+                  ["ni",
+                    ["concat", "quant-transformationratio:",
+                      ["string", "_S.quant-communicationpoint:id"]
+                    ]
+                  ], "gg.$ids"]
+              ],
+              "return": "gg.quant-transformationratio:serialnumber"
+            }]
+          ]
+        ]
+      ],
+      "part_serial_history": [
+        ["copy", "global-workorder:partserialhistory_*"]
+      ],
+      "quadrantsreading": [
+        ["copy", "ifs-quadrantsreading:*"]
+      ],
+      "wms_case": [
+        ["add", "case_id", "_P._S.wms-case-info:case_id"],
+        ["add", "status_id", "_P._S.wms-case-info:status_id"],
+        ["add", "case_type_id", "_P._S.wms-case-info:case_type_id"],
+        ["add", "counters", "_P._S.wms-case-info:counters.wms-case-counter-info:counter_code"],
+        ["add", "errors",
+          ["apply", "wms_case_timestamp", "_P._S.wms-case-info:timestamps"]
+        ],
+        ["add", "status_description", "_S.wms-case-status:status_name"]
+      ],
+      "wms_case_timestamp": [
+        ["filter",
+          ["intersects", "_S.wms-case-timestamp:timestamp_id",
+            ["list", 852, 849, 850]
+          ]
+        ],
+        ["add", "type_id", "_S.wms-case-timestamp:timestamp_id"],
+        ["add", "type",
+          ["case-eq", "_S.wms-case-timestamp:timestamp_id", 852, "logical error", 849, "cab error", 850, "generis error"]
+        ],
+        ["add", "description", "_S.wms-case-timestamp:timestamp_comment"]
+      ]
+    }
+  }, {
+    "type": "dtl",
+    "rules": {
+      "default": [
+        ["copy", "*"],
+        ["add", "part_serial_history",
+          ["apply-hops", "asset_state", {
+            "datasets": ["global-asset ga"],
+            "where": [
+              ["eq", "_S.tmp_part_serial_history", "ga.$ids"]
+            ]
+          }]
+        ],
+        ["remove", "tmp_*"]
+      ],
+      "asset_state": [
+        ["add", "serial_no", "_S.ifs-part-serial-history:serial_no"],
+        ["add", "part_no", "_S.ifs-part-serial-history:part_no"],
+        ["add", "part_main_group",
+          ["first",
+            ["hops", {
+              "datasets": ["global-asset ga"],
+              "where": [
+                ["eq", "_S.ifs-part-serial-history:part_no-ni", "ga.$ids"]
+              ],
+              "return": "ga.ifs-part-catalog:part_main_group"
+            }]
+          ]
+        ],
+        ["add", "type",
+          ["if",
+            ["and",
+              ["in",
+                ["ni", "ifs:Part-serial-history"], "_S.rdf:type"],
+              ["eq", "_S.ifs-part-serial-history:order_type_db", "WORK ORDER"],
+              ["eq", "_S.ifs-part-serial-history:current_position_db", "InInventory"],
+              ["is-not-null", "_S.ifs-part-serial-history:superior_alternate_id"]
+            ],
+            ["case-eq", "_T.part_main_group", "C", "uninstalled_currenttransformer", "V", "uninstalled_voltagetransformer", "K", "uninstalled_concentrator", "I", "uninstalled_IM_meter", "D", "uninstalled_DM_meter"],
+            ["case-eq", "_T.part_main_group", "C", "installed_currenttransformer", "V", "installed_voltagetransformer", "K", "installed_concentrator", "I", "installed_IM_meter", "D", "installed_DM_meter"]
+          ]
+        ]
+      ]
+    }
+  }],
+  "metadata": {
+    "$config-group": "maintenance",
+    "tags": ["aosjekk"]
+  },
+  "remove_namespaces": true
+}
