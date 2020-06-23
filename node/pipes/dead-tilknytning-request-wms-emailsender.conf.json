@@ -1,0 +1,418 @@
+{
+  "_id": "dead-tilknytning-request-wms-emailsender",
+  "type": "pipe",
+  "source": {
+    "type": "embedded",
+    "entities": [{
+      "_id": "Code 0",
+      "boolean": true,
+      "extra-keys": [{
+        "key": "Error Text",
+        "types": [{
+          "type": "Error text",
+          "matchOn": "*text: *",
+          "split1": "text: ",
+          "split2": "\"}'\n",
+          "takeFirst1": false,
+          "takeFirst2": true
+        }]
+      }],
+      "filteronError": "*Error type: SEVERE, code: 0*",
+      "message": "Disse arbeidsordrene har fått en ukjent feil. Teksten fra feilen er medlagt i tabellen.",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Tilknytning mot WMS: Feilkode 0"
+    }, {
+      "_id": "Code 1000: Can't update DP",
+      "boolean": true,
+      "filteronError": "*Error type: SEVERE, code: 1000, text: Error when updating delivery site - Error when updating delivery site*",
+      "message": "Disse arbeidsordrene har fått en ukjent feil. Teksten fra feilen er medlagt i tabellen.",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Tilknytning mot WMS: Kunne ikke oppdatere deliverysite"
+    }, {
+      "_id": "Code 1001: Can't create DP",
+      "boolean": true,
+      "filteronError": "*Error when creating delivery site - Error when creating delivery site*",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Tilknytning mot WMS: Kunne ikke skape deliverysite"
+    }, {
+      "_id": "Code 1006: Error handling customer",
+      "boolean": true,
+      "filteronError": "*FAILED.Type:SEVERECode:1006Text:Error when handling customer - Error when handling customer*",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Tilknytning mot WMS: Kunne ikke håndtere kundedata."
+    }, {
+      "_id": "Unkown Error when creating new delivery site",
+      "boolean": true,
+      "extra-keys": [{
+        "key": "Error Type",
+        "types": [{
+          "type": "No Customer",
+          "matchOn": "*Error no customer specified for errand creation*"
+        }, {
+          "type": "String error",
+          "matchOn": "*For input string:*",
+          "split1": "For input string: \\\"",
+          "split2": "\\\"\"}'\n",
+          "takeFirst1": false,
+          "takeFirst2": true
+        }]
+      }],
+      "filteronError": "*1009Text:Unknown error occurred when creating a new delivery site*",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Tilknytning mot WMS: Feil ved skapelse av errende."
+    }, {
+      "_id": "Updating new delivery site",
+      "boolean": true,
+      "extra-keys": [{
+        "key": "Error Type",
+        "types": [{
+          "type": "ORA",
+          "matchOn": "*ORA*",
+          "split1": " ORA-",
+          "takeFirst1": false
+        }, {
+          "type": "Unkown DS",
+          "matchOn": "*Unable to find delivery site*"
+        }]
+      }],
+      "filteronError": "*1010Text:Unknown error occurred when updating a new delivery site errand*",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Tilknytning mot WMS: Ukjent feil ved skapelse av delivery site."
+    }, {
+      "_id": "Code 1011: Error when updating DP changes errand",
+      "boolean": true,
+      "filteronError": "*1011Text:Error when updating delivery site changes errand*",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Tilknytning mot WMS: Feil ved oppdatering av delivery site"
+    }, {
+      "_id": "Code 1012: Error when creating DS changes errand",
+      "boolean": true,
+      "extra-keys": [{
+        "key": "error-info",
+        "types": [{
+          "type": "pga att det finns aktiva ärenden på denna anläggning av typerna",
+          "matchOn": "*pga att det finns aktiva ärenden på denna anläggning av typerna*",
+          "split1": " pga att det finns aktiva ärenden på denna anläggning av typerna: ",
+          "split2": ".\"}'\n",
+          "takeFirst1": false,
+          "takeFirst2": true
+        }, {
+          "type": "Error when something was about to be created",
+          "matchOn": "*An error occurred when a new *",
+          "split1": "An error occurred when a new ",
+          "split2": " was about to be created",
+          "takeFirst1": false,
+          "takeFirst2": true
+        }]
+      }, {
+        "key": "Error type",
+        "types": [{
+          "type": "Other Active errands",
+          "matchOn": "*pga att det finns aktiva ärenden på denna anläggning av typerna*"
+        }, {
+          "type": "Error when something was about to be created",
+          "matchOn": "*An error occurred when a new *"
+        }, {
+          "type": "Unable to find DS",
+          "matchOn": "*Unable to find delivery site with id: *"
+        }, {
+          "type": "only AMM errands allowed",
+          "matchOn": "*can be created on AMM activated sites*"
+        }, {
+          "type": "no AMM errands allowed",
+          "matchOn": "*cannot be created on AMM activated sites*"
+        }]
+      }],
+      "filteronError": "*1012Text:Error when creating delivery site changes errand*",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Tilknytning mot WMS: Feil ved skapelse av delivery site"
+    }, {
+      "_id": "Error code 1013: Missing fields for delivery site",
+      "boolean": true,
+      "extra-keys": [{
+        "key": "field",
+        "types": [{
+          "type": "mandatory",
+          "matchOn": "*is mandatory*",
+          "split1": "Error when validating fields for delivery site - ",
+          "split2": " is mandatory",
+          "takeFirst1": false,
+          "takeFirst2": true
+        }]
+      }],
+      "filteronError": "*1013Text:Error when validating fields for delivery site*",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Tilknytning mot WMS: mangler felt for delivery site"
+    }, {
+      "_id": "Error code 1016: Validation errors values for delivery site",
+      "boolean": true,
+      "extra-keys": [{
+        "key": "field",
+        "types": [{
+          "type": "",
+          "matchOn": "* is not valid value for *",
+          "split1": " is not valid value for ",
+          "split2": "\"}'\n",
+          "takeFirst1": false,
+          "takeFirst2": true
+        }]
+      }, {
+        "key": "invalid value",
+        "types": [{
+          "type": "",
+          "matchOn": "* is not valid value for *",
+          "split1": "1016Text:Error during the validation - ",
+          "split2": " is not valid value for ",
+          "takeFirst1": false,
+          "takeFirst2": true
+        }]
+      }],
+      "filteronError": "*1016Text:Error during the validation - *",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Tilknytning mot WMS: Validerings feil."
+    }, {
+      "_id": "Validation error for customer",
+      "boolean": true,
+      "extra-keys": [{
+        "key": "field",
+        "types": [{
+          "type": "",
+          "matchOn": "*1017Text:Error during validation of the customer - *",
+          "split1": "Error during validation of the customer - ",
+          "split2": " is ",
+          "takeFirst1": false,
+          "takeFirst2": true
+        }]
+      }, {
+        "key": "type",
+        "types": [{
+          "type": "",
+          "matchOn": "*1017Text:Error during validation of the customer - *",
+          "split1": "is ",
+          "split2": "\"}'\n",
+          "takeFirst1": false,
+          "takeFirst2": true
+        }]
+      }],
+      "filteronError": "*1017Text:Error during validation of the customer - *",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Tilknytning mot WMS: Feil ved validering av kundedata"
+    }, {
+      "_id": "Error 1019: Active errand of same type exists",
+      "boolean": true,
+      "extra-keys": [{
+        "key": "Active Errand",
+        "types": [{
+          "type": "Active Errand",
+          "matchOn": "* -  errand id *",
+          "split1": " -  errand id ",
+          "split2": "\"}'\n",
+          "takeFirst1": false,
+          "takeFirst2": true
+        }]
+      }],
+      "filteronError": "*1019Text:Error active errand of the same type already exists for the delivery site -  *",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Tilknytning mot WMS: Aktiv errende finnes allerede for deliverysite"
+    }, {
+      "_id": "Timeout",
+      "boolean": true,
+      "filteronError": "*The request channel timed out while waiting for a reply after*",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Tilknytning mot WMS: Timet ut"
+    }, {
+      "_id": "No endpoint listening",
+      "boolean": true,
+      "filteronError": "*There was no endpoint listening at *",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Tilknytning mot WMS: Ingen endepunkt som lytter"
+    }, {
+      "_id": "Unable to deserialize",
+      "boolean": true,
+      "extra-keys": [{
+        "key": "conversion",
+        "types": [{
+          "type": "String",
+          "matchOn": "*deserialize string*",
+          "split1": "Unable to deserialize string \\\"",
+          "split2": "\\\" to type ",
+          "takeFirst1": false,
+          "takeFirst2": true
+        }]
+      }, {
+        "key": "To Type",
+        "types": [{
+          "type": "to type",
+          "matchOn": "*deserialize string*",
+          "split1": "\\\" to type ",
+          "split2": "\"}'\n",
+          "takeFirst1": false,
+          "takeFirst2": true
+        }]
+      }],
+      "filteronError": "*Unable to deserialize string *",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Tilknytning mot WMS: Feil ved omgjøring av streng data."
+    }, {
+      "_id": "Could not connect",
+      "boolean": true,
+      "filteronError": "*could not connect to the server*",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Tilknytning mot WMS: Kunne ikke koble til server"
+    }]
+  },
+  "transform": {
+    "type": "dtl",
+    "rules": {
+      "default": [
+        ["copy",
+          ["list", "message", "receivers", "subject"]
+        ],
+        ["add", "keys",
+          ["filter",
+            ["is-not-null", "_."],
+            ["union",
+              ["list", "Elsmart ID", "MP ID", "IFS-Status", "IFS-Pauset?", "Error-TS", "LastName", "OrgNo", "Ordernumber"], "_S.extra-keys.key"]
+          ]
+        ],
+        ["add", "errors",
+          ["reversed",
+            ["sorted", "_.Error-TS",
+              ["apply-hops", "getValuableData", {
+                "datasets": ["system:dead-letter:tilknytning-request-workorder-wms-endpoint dlrdww"],
+                "where": ["eq", "dlrdww.dead", "_S.boolean"],
+                "track-dependencies": "$ENV(dependency)"
+              }]
+            ]
+          ]
+        ],
+        ["add", "endmessage",
+          ["concat", "Amount of workorders in this list: ",
+            ["string",
+              ["count", "_T.errors"]
+            ]
+          ]
+        ],
+        ["remove", "tmp_*"],
+        ["discard",
+          ["neq", 0,
+            ["count", "_T.errors"]
+          ]
+        ]
+      ],
+      "getExtraKeys": [
+        ["add", "_S.entity.key",
+          ["coalesce",
+            ["values",
+              ["map",
+                ["apply", "getTypeInfo",
+                  ["dict", "typeinfo", "_.", "cleaned_error_message", "_S.error"]
+                ], "_S.entity.types"]
+            ]
+          ]
+        ]
+      ],
+      "getTypeInfo": [
+        ["if",
+          ["matches", "_S.typeinfo.matchOn", "_S.cleaned_error_message"],
+          ["if",
+            ["is-null", "_S.typeinfo.split1"],
+            ["add", "returnVal", "_S.typeinfo.type"],
+            [
+              ["add", "tmp_split1",
+                ["if", "_S.typeinfo.takeFirst1",
+                  ["first",
+                    ["split", "_S.typeinfo.split1", "_S.cleaned_error_message"]
+                  ],
+                  ["last",
+                    ["split", "_S.typeinfo.split1", "_S.cleaned_error_message"]
+                  ]
+                ]
+              ],
+              ["add", "returnVal",
+                ["if",
+                  ["is-null", "_S.typeinfo.split2"], "_T.tmp_split1",
+                  ["if", "_S.typeinfo.takeFirst2",
+                    ["first",
+                      ["split", "_S.typeinfo.split2", "_T.tmp_split1"]
+                    ],
+                    ["last",
+                      ["split", "_S.typeinfo.split2", "_T.tmp_split1"]
+                    ]
+                  ]
+                ]
+              ],
+              ["remove", "tmp*"]
+            ]
+          ]
+        ]
+      ],
+      "getValuableData": [
+        ["filter",
+          ["and",
+            ["matches", "_P._S.filteronError", "_S.original_error_message"],
+            ["lte",
+              ["datetime-diff", "hour",
+                ["now"],
+                ["datetime",
+                  ["multiply", 1000, "_S._ts"]
+                ]
+              ], 24]
+          ]
+        ],
+        ["add", "cleaned_error_message",
+          ["first",
+            ["split", "Fragment",
+              ["last",
+                ["split", "Message", "_S.original_error_message"]
+              ]
+            ]
+          ]
+        ],
+        ["merge",
+          ["apply-hops", "global-data", {
+            "datasets": ["global-workorder gw"],
+            "where": ["eq",
+              ["ni", "_S.entity.Resource"], "gw.$ids"],
+            "track-dependencies": "$ENV(dependency)"
+          }]
+        ],
+        ["add", "Elsmart ID", "_S.entity._id"],
+        ["add", "MP ID", "_S.entity.Payload.DeliverySite.DeliverySiteId"],
+        ["add", "MP ID", "_S.entity.Payload.DeliverySite.DeliverySiteId"],
+        ["add", "LastName", "_S.entity.Payload.CustomerInfo.LastName"],
+        ["add", "OrgNo", "_S.entity.Payload.CustomerInfo.OrganizationNo"],
+        ["add", "Ordernumber", "_S.entity.Payload.OrderNumber"],
+        ["if",
+          ["is-not-null", "_P._S.extra-keys"],
+          ["merge",
+            ["map",
+              ["apply", "getExtraKeys",
+                ["dict", "entity", "_.", "error", "_T.cleaned_error_message"]
+              ], "_P._S.extra-keys"]
+          ]
+        ],
+        ["add", "Error-TS",
+          ["datetime-format", "%Y-%m-%d",
+            ["datetime",
+              ["multiply", 1000, "_S._ts"]
+            ]
+          ]
+        ],
+        ["remove", "cleaned_error_message"],
+        ["remove", "tmp*"]
+      ],
+      "global-data": [
+        ["add", "IFS-Status", "_S.ifs-workorder:objstate"],
+        ["add", "IFS-Pauset?",
+          ["if", "_S.ifs-workorder-paused", "Yes"]
+        ]
+      ]
+    }
+  },
+  "metadata": {
+    "$config-group": "maintenance",
+    "author": "Gabriell",
+    "tags": ["email"]
+  }
+}

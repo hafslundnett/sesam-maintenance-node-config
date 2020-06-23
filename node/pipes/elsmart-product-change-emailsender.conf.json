@@ -1,0 +1,67 @@
+{
+  "_id": "elsmart-product-change-emailsender",
+  "type": "pipe",
+  "source": {
+    "type": "embedded",
+    "entities": [{
+      "_id": "M026",
+      "message": "Disse arbeidsordrene angår M026 Høyspenning trafobytte og har hatt status WORKREQUEST i ifs de siste 24 timene",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Kristoffer.Fylling.Vik@hafslund.no, Vegard.Haukaas@hafslund.no, Ragnar.Maalen-Johansen@hafslund.no, roald.karlsen@hafslund.no",
+      "subject": "M026 Høyspenning AO skapelse/oppdatering.",
+      "value": "~:map-elsmart-product:M026"
+    }]
+  },
+  "transform": {
+    "type": "dtl",
+    "rules": {
+      "default": [
+        ["copy",
+          ["list", "message", "receivers", "subject"]
+        ],
+        ["add", "keys",
+          ["list", "elsmart-id", "ifs-id", "el-ref"]
+        ],
+        ["add", "errors",
+          ["apply-hops", "getValuableInfo", {
+            "datasets": ["global-workorder gw"],
+            "where": ["eq", "_S.value", "gw.elsmart-workorder:product-ni"],
+            "track-dependencies": "$ENV(dependency)",
+            "prefilters": {
+              "gw": ["eq", "_S.rdf:type", "~:elsmart:Workorder"]
+            }
+          }]
+        ],
+        ["discard",
+          ["neq", 0,
+            ["count", "_T.errors"]
+          ]
+        ]
+      ],
+      "getValuableInfo": [
+        ["filter",
+          ["lte",
+            ["datetime-diff", "hour",
+              ["now"],
+              ["datetime",
+                ["multiply", 1000, "_S._ts"]
+              ]
+            ], 24]
+        ],
+        ["rename", "elsmart-workorder:id", "elsmart-id"],
+        ["add", "el-ref", "_S.OrderHead.ElsmartParentOrderID"],
+        ["add", "ifs-id",
+          ["string", "_S.ifs-workorder:wo_no"]
+        ],
+        ["filter",
+          ["eq", "_S.ifs-workorder:objstate", "WORKREQUEST"]
+        ]
+      ]
+    }
+  },
+  "metadata": {
+    "$config-group": "maintenance",
+    "author": "Gabriell",
+    "tags": ["email"]
+  },
+  "remove_namespaces": true
+}

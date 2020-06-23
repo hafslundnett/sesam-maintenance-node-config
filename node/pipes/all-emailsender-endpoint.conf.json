@@ -1,0 +1,37 @@
+{
+  "_id": "all-emailsender-endpoint",
+  "type": "pipe",
+  "source": {
+    "type": "union_datasets",
+    "datasets": ["dead-meterpoint-asset-quant-emailsender", "dead-meterpoint-quant-emailsender", "dead-replacement-done-wms-emailsender", "dead-tilknytning-request-ifs-emailsender", "dead-tilknytning-request-wms-emailsender", "elsmart-product-change-emailsender", "emailsender-tilknytning-missing-orgno"],
+    "include_previous_versions": false,
+    "supports_signalling": false
+  },
+  "sink": {
+    "type": "mail",
+    "system": "emailsender",
+    "body_template": "<html>{{ message}}<br></br><body><table><TR>{% for key in keys %}<TD>{{ key }}</TD>{% endfor %}</TR>{% for entity in errors %}<TR> {% for key in keys %}<TD>{{ entity[key] }}</TD>{% endfor %}</TR>{% endfor %}</table></body><br></br>{{ endmessage }}</html>",
+    "mail_from": "SesamMailSender@hafslund.no",
+    "recipients_property": "receivers",
+    "subject_template": "{{subject}}"
+  },
+  "transform": {
+    "type": "dtl",
+    "rules": {
+      "default": [
+        ["filter",
+          ["not", "_S._deleted"]
+        ],
+        ["copy", "*"]
+      ]
+    }
+  },
+  "pump": {
+    "cron_expression": "0 6 ? * * *"
+  },
+  "metadata": {
+    "$config-group": "maintenance",
+    "author": "Gabriell",
+    "tags": ["email"]
+  }
+}

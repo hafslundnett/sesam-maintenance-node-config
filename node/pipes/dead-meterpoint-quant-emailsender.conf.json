@@ -1,0 +1,191 @@
+{
+  "_id": "dead-meterpoint-quant-emailsender",
+  "type": "pipe",
+  "source": {
+    "type": "embedded",
+    "entities": [{
+      "_id": "01",
+      "boolean": true,
+      "filteronError": "* with active CommunicationPoints*",
+      "message": "These meterpoint messages try to remove a distributionpoint with active communicationpoints. Quant has a different state than REMOVED for these meterpoints.",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "shouldBeRemoved": true,
+      "subject": "Målepunkt mot Quant: Fjerning av distribusjonspunkt med aktive kommunikasjonspunkter"
+    }, {
+      "_id": "02",
+      "boolean": true,
+      "extra-keys": "installed-assets",
+      "filteronError": "*Remove assets before removal*",
+      "message": "These distributionpoint messages try to remove a distributionpoint with installed assets.",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "shouldBeRemoved": true,
+      "subject": "Målepunkt mot Quant: Fjerning av distribusjonspunkt med installerte enheter."
+    }, {
+      "_id": "03",
+      "boolean": true,
+      "filteronError": "*Data integrity violation*",
+      "message": "These distributionpoint messages got the 'Data integrity violation' error.",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Målepunkt mot Quant: Data integritets feil"
+    }, {
+      "_id": "04",
+      "boolean": true,
+      "filteronError": "*MeterPoint not found*",
+      "message": "These distributionpoint messages got the 'MeterPoint not found' error.",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Målepunkt mot Quant: Målerpunkt ikke funnet."
+    }, {
+      "_id": "05",
+      "boolean": true,
+      "extra-keys": "DP Parent",
+      "filteronError": "*Unknown DistributionPoint parent*",
+      "message": "These distributionpoint messages has an unkown distributionpoint parent.",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Målepunkt mot Quant: Ukjent distribusjonspunkt foreldre"
+    }, {
+      "_id": "06",
+      "boolean": true,
+      "extra-keys": ["Found Element", "Expected Element"],
+      "filteronError": "*Invalid content was found starting with element '*",
+      "message": "These distributionpoint messages have invalid content. The parsing of the error message gives us what was expected vs what was invalidly given.",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "split1": "Invalid content was found starting with element '",
+      "split2": "'. One of '{",
+      "subject": "Målepunkt mot Quant: Gitt data stemmer ikke med forventet data."
+    }]
+  },
+  "transform": [{
+    "type": "dtl",
+    "rules": {
+      "default": [
+        ["copy",
+          ["list", "subject", "message", "receivers"]
+        ],
+        ["add", "keys",
+          ["filter",
+            ["is-not-null", "_."],
+            ["union",
+              ["list", "MP", "quant-state", "Error-TS"],
+              ["if",
+                ["is-list", "_S.extra-keys"], "_S.extra-keys",
+                ["list", "_S.extra-keys"]
+              ]
+            ]
+          ]
+        ],
+        ["add", "errors",
+          ["apply-hops", "getValuableData", {
+            "datasets": ["system:dead-letter:meterpoint-quant-endpoint dlmq"],
+            "where": ["eq", "dlmq.dead", "_S.boolean"],
+            "track-dependencies": "$ENV(dependency)"
+          }]
+        ],
+        ["add", "endmessage",
+          ["concat", "Amount of workorders in this list: ",
+            ["string",
+              ["count", "_T.errors"]
+            ]
+          ]
+        ],
+        ["filter",
+          ["neq", 0,
+            ["count", "_T.errors"]
+          ]
+        ],
+        ["remove", "tmp_*"]
+      ],
+      "getValuableData": [
+        ["filter",
+          ["and",
+            ["matches", "_P._S.filteronError", "_S.original_error_message"],
+            ["lte",
+              ["datetime-diff", "hour",
+                ["now"],
+                ["datetime",
+                  ["multiply", 1000, "_S._ts"]
+                ]
+              ], 24]
+          ]
+        ],
+        ["add", "MP", "_S._id"],
+        ["comment", "check quant state if entity made it to quant and got removed."],
+        ["merge",
+          ["apply-hops", "global-mp", {
+            "datasets": ["global-meterpoint gm"],
+            "where": ["eq", "gm.$ids",
+              ["ni", "ifs-equipment-functional", "_S._id"]
+            ],
+            "track-dependencies": "$ENV(dependency)",
+            "prefilters": {
+              "gm": ["eq", "_S.rdf:type", "~:ifs:Equipment-functional"]
+            }
+          }]
+        ],
+        ["comment", "dont send MP's which have already been removed"],
+        ["add", "Failed-TS",
+          ["datetime-format", "%Y-%m-%dT%H:%M:%SZ",
+            ["datetime",
+              ["multiply", 1000, "_S._ts"]
+            ]
+          ]
+        ],
+        ["if", "_P._S.shouldBeRemoved",
+          ["filter",
+            ["neq", "REMOVED", "_T.quant-state"]
+          ]
+        ],
+        ["if",
+          ["in", "DP Parent", "_P._S.extra-keys"],
+          ["add", "DP Parent", "_S.entity.Payload.DistributionPoint.ParentDistributionPointId"]
+        ],
+        ["if",
+          ["in", "Found Element", "_P._S.extra-keys"],
+          [
+            ["add", "tmp_split",
+              ["split", "_P._S.split2",
+                ["last",
+                  ["split", "_P._S.split1", "_S.original_error_message"]
+                ]
+              ]
+            ],
+            ["add", "Found Element",
+              ["first", "_T.tmp_split"]
+            ],
+            ["add", "Expected Element",
+              ["substring", 0, -19,
+                ["last", "_T.tmp_split"]
+              ]
+            ]
+          ]
+        ],
+        ["add", "Error-TS",
+          ["datetime-format", "%Y-%m-%dT%H:%M:%SZ",
+            ["datetime",
+              ["multiply", 1000, "_S._ts"]
+            ]
+          ]
+        ],
+        ["remove", "tmp_*"]
+      ],
+      "global-mp": [
+        ["add", "installed-assets",
+          ["hops", {
+            "datasets": ["global-asset ga"],
+            "where": ["eq", "_S.$ids", "ga.quant-asset:communicationpoint_id-ni"],
+            "return": "ga.quant-asset:serialnumber",
+            "track-dependencies": "$ENV(dependency)",
+            "prefilters": {
+              "ga": ["eq", "_S.rdf:type", "~:quant:Asset"]
+            }
+          }]
+        ],
+        ["add", "quant-state", "_S.quant-communicationpoint:state"]
+      ]
+    }
+  }],
+  "metadata": {
+    "$config-group": "maintenance",
+    "author": "Gabriell",
+    "tags": ["email"]
+  }
+}
