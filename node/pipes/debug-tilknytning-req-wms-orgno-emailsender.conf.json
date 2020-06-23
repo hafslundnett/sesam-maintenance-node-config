@@ -1,0 +1,125 @@
+{
+  "_id": "debug-tilknytning-req-wms-orgno-emailsender",
+  "type": "pipe",
+  "source": {
+    "type": "dataset",
+    "dataset": "global-workorder",
+    "subset": ["eq", "_S.rdf:type", "~:elsmart:Workorder"]
+  },
+  "transform": [{
+    "type": "dtl",
+    "rules": {
+      "default": [
+        ["filter",
+          ["and",
+            ["eq", "_S.OrderDetails.OrderType", "NewInstallation"],
+            ["coalesce", "_S.OrderDetails.ServiceOrder.Installation.Asset.GridCustomer.Actor.BirthDateSpecified"],
+            ["is-not-null", "_S.installation-ni"],
+            ["is-empty",
+              ["hops", {
+                "datasets": ["global-classification gc"],
+                "where": [
+                  ["eq", "_S.product-ni", "gc.$ids"],
+                  ["eq", true, "gc.disabled-wms"]
+                ],
+                "return": "gc.id",
+                "track-dependencies": "$ENV(dependency)",
+                "prefilters": {
+                  "gc": ["eq", "_S.rdf:type", "~:nav:ElsmartProduct"]
+                }
+              }]
+            ],
+            ["is-not-empty",
+              ["hops", {
+                "datasets": ["global-classification gc"],
+                "where": ["eq", "_S.product-ni", "gc.$ids"],
+                "return": "gc.map-elsmart-product:settlementmethod",
+                "track-dependencies": "$ENV(dependency)",
+                "prefilters": {
+                  "gc": ["eq", "_S.rdf:type", "~:nav:ElsmartProduct"]
+                }
+              }]
+            ]
+          ]
+        ],
+        ["filter",
+          ["or",
+            ["eq", "_S.wms-case-info:status_id", 2],
+            ["is-null", "_S.wms-case-info:status_id"]
+          ]
+        ],
+        ["add", "tmp_firstasset",
+          ["first", "_S.OrderDetails.ServiceOrder.Installation.Asset"]
+        ],
+        ["add", "firstname", "_T.tmp_firstasset.GridCustomer.Actor.FirstName"],
+        ["add", "lastname", "_T.tmp_firstasset.GridCustomer.Actor.LastName"],
+        ["comment", "If customer is private person, check if we have stored the personal-number before using workorder data"],
+        ["add", "organizationno",
+          ["if-null",
+            ["first",
+              ["hops", {
+                "datasets": ["global-customer gc"],
+                "where": ["eq",
+                  ["ni", "_S._id"], "gc.elsmart-workorder-customerinfo:workorder-id-ni"],
+                "return": "gc.elsmart-workorder-customerinfo:FullBirthNo",
+                "track-dependencies": "$ENV(dependency)"
+              }]
+            ],
+            ["if",
+              ["eq",
+                ["length", "_T.tmp_firstasset.GridCustomer.Actor.FullBirthNo"], 11], "_T.tmp_firstasset.GridCustomer.Actor.FullBirthNo",
+              ["datetime-format", "%d.%m.%Y",
+                ["if-null",
+                  ["datetime-parse", "%Y-%m-%dT%H:%M:%S.%fZ", "_T.tmp_firstasset.GridCustomer.Actor.BirthDate"],
+                  ["datetime-parse", "%Y-%m-%dT%H:%M:%SZ", "_T.tmp_firstasset.GridCustomer.Actor.BirthDate"]
+                ]
+              ]
+            ]
+          ]
+        ],
+        ["filter",
+          ["neq", 11,
+            ["length", "_T.organizationno"]
+          ]
+        ],
+        ["add", "erranddatetime", "_S.OrderDetails.ServiceOrder.ServiceorderHead.Planning.DatePlanned"],
+        ["filter",
+          ["gt",
+            ["datetime-diff", "day",
+              ["if-null",
+                ["datetime-parse", "%Y-%m-%dT%H:%M:%S.%fZ", "_T.erranddatetime"],
+                ["datetime-parse", "%Y-%m-%dT%H:%M:%SZ", "_T.erranddatetime"]
+              ], "~t2017-08-08T00:00:00Z"], 0]
+        ],
+        ["add", "timestamp", "_S._ts"],
+        ["copy", "OrderHead"],
+        ["copy", "OrderDetails"]
+      ]
+    }
+  }, {
+    "type": "dtl",
+    "rules": {
+      "default": [
+        ["add", "IFS-State", "_S.objstate"],
+        ["add", "WMS-Status", "_S.wms-status"],
+        ["add", "updated-timestamp",
+          ["datetime-format", "%Y-%m-%dT%H:%M:%S",
+            ["datetime",
+              ["multiply", 1000, "_S.checking-tilknytning-req-orgno:timestamp"]
+            ]
+          ]
+        ],
+        ["add", "Els-ID", "_S.OrderDetails.ServiceOrder.ServiceorderHead.SystemID"],
+        ["add", "MP-ID", "_S.OrderDetails.ServiceOrder.Installation.InstallationID"],
+        ["add", "el-ref", "_S.OrderHead.ElsmartParentOrderID"]
+      ]
+    }
+  }],
+  "metadata": {
+    "$config-group": "maintenance",
+    "author": "Gabriell",
+    "utility": "This pipe is created for checking which tilknytning newinstallations miss fodselsnr"
+  },
+  "add_namespaces": false,
+  "remove_namespaces": true
+}

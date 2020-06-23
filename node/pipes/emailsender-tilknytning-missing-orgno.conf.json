@@ -1,0 +1,74 @@
+{
+  "_id": "tilknytning-request-missing-orgno-emailsender",
+  "type": "pipe",
+  "source": {
+    "type": "embedded",
+    "entities": [{
+      "_id": "elsmart missing orgno",
+      "boolean": false,
+      "message": "Workorders from elsmart received without fodselsnummer.",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no, Kristoffer.Fylling.Vik@hafslund.no",
+      "subject": "(PowelID:147670) (D88514) AOer som mangler fødselsnummer"
+    }]
+  },
+  "transform": {
+    "type": "dtl",
+    "rules": {
+      "default": [
+        ["copy",
+          ["list", "message", "receivers", "subject"]
+        ],
+        ["add", "keys",
+          ["filter",
+            ["is-not-null", "_."],
+            ["union",
+              ["list", "MP-ID", "Els-ID", "el-ref", "IFS-State", "WMS-Status", "updated-timestamp"], "_S.extra-keys.key"]
+          ]
+        ],
+        ["comment", "Each entity produced by this function will be a row in the email."],
+        ["add", "errors",
+          ["reversed",
+            ["sorted", "_.ts",
+              ["apply-hops", "getValuableData", {
+                "datasets": ["debug-tilknytning-req-wms-orgno-emailsender nag"],
+                "where": ["eq", "nag._deleted", "_S.boolean"],
+                "track-dependencies": "$ENV(dependency)"
+              }]
+            ]
+          ]
+        ],
+        ["add", "endmessage",
+          ["concat", "Amount of workorders in this list: ",
+            ["string",
+              ["count", "_T.errors"]
+            ]
+          ]
+        ],
+        ["discard",
+          ["neq",
+            ["count", "_T.errors"], 0]
+        ],
+        ["remove", "tmp_*"]
+      ],
+      "getValuableData": [
+        ["comment", "Filter out entity based on embedded data's filteronError value."],
+        ["comment", "Also a filter to only grab entities updated in the past 24h."],
+        ["filter",
+          ["lte",
+            ["datetime-diff", "hour",
+              ["now"],
+              ["datetime",
+                ["multiply", 1000, "_S._ts"]
+              ]
+            ], 24]
+        ],
+        ["copy", "*", "_*"]
+      ]
+    }
+  },
+  "metadata": {
+    "$config-group": "maintenance",
+    "author": "Gabriell",
+    "tags": ["email"]
+  }
+}

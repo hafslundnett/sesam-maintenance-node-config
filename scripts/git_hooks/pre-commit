@@ -31,7 +31,7 @@ fi
 ###### automatic whitelist maintenance######
 cd $node_root
 
-#stop if any whitelist file is among the unstaged files
+ #stop if any whitelist file is among the unstaged files
 unstaged_whitelist_count=`git diff --name-only deployment/whitelist-* | wc -l`
 if [ $unstaged_whitelist_count -gt 0 ];then
   printf "\033[0;31mGIT-HOOK:\n\tChages to whitelists must be staged or reset!\033[0m\n"
@@ -70,17 +70,17 @@ for wl in `ls deployment/whitelist-*.txt`;do
 done;
 
 # if whitelist-master has a diff and it is not fully updated after added/removed configs, notify user
-#git --no-pager diff --exit-code deployment/whitelist-master.txt &> /dev/null
-#
-#if [ "$?" -ne "0" ];then
-#    new_files=$(git --no-pager diff -U0 --exit-code deployment/whitelist-master.txt | egrep '^\+[^+]' | cut -d '+' -f 2)
-#    for file in $new_files;do
-#        if [[ "${staged_files[@]}" =~ "$file" ]] && [[ ! "${staged_files[@]}" =~ "deployment/whitelist-master.txt" ]];then
-#            printf "\033[0;31mGIT-HOOK: \n\twhitelists are auto-updated after your changes!\n\tPlease verify whitelists and stage them\033[0m\n"
-#            exit 1
-#        fi
-#    done
-#fi
+git --no-pager diff --exit-code deployment/whitelist-master.txt &> /dev/null
+
+if [ "$?" -ne "0" ];then
+    new_files=$(git --no-pager diff -U0 --exit-code deployment/whitelist-master.txt | egrep '^\+[^+]' | cut -d '+' -f 2)
+    for file in $new_files;do
+        if [[ "${staged_files[@]}" =~ "$file" ]] && [[ ! "${staged_files[@]}" =~ "deployment/whitelist-master.txt" ]];then
+            printf "\033[0;31mGIT-HOOK: \n\twhitelists are auto-updated after your changes!\n\tPlease verify whitelists and stage them\033[0m\n"
+            exit 1
+        fi
+    done
+fi
 ##################################################################################
 ###### Validate all json files to avoid trailing commas and such #################
 cd $git_root

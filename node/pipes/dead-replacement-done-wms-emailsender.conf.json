@@ -1,0 +1,182 @@
+{
+  "_id": "dead-replacement-done-wms-emailsender",
+  "type": "pipe",
+  "source": {
+    "type": "embedded",
+    "entities": [{
+      "_id": "01",
+      "boolean": true,
+      "comment": "we should get these emails",
+      "filteronError": "*Connection refused*",
+      "message": "These workorders got the error: 'Connection refused'",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Målerbytte mot WMS: Connection refused"
+    }, {
+      "_id": "02",
+      "boolean": true,
+      "filteronError": "*Error converting value *",
+      "message": "These workorders have errandid set to null.",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Målerbytte mot WMS: Errandid mangler."
+    }, {
+      "_id": "03",
+      "boolean": true,
+      "comment": "we should get these emails",
+      "filteronError": "*Increase the timeout value passed to the call to*",
+      "message": "These workorders timed out on their way from the pushreceiver.",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Målerbytte mot WMS: Timet ut på vei fra pushreceiver til WMS.."
+    }, {
+      "_id": "04",
+      "boolean": true,
+      "filteronError": "*Error when updating delivery site changes errand*",
+      "message": "These workorders could not update the delivery site.",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Målerbytte mot WMS: Kunne ikke oppdatere delivery-site."
+    }, {
+      "_id": "041",
+      "boolean": true,
+      "extra-keys": "ActiveErrandType",
+      "filteronError": "*Ärende kan ej skapas på anläggning*",
+      "function": "get-errand-type",
+      "message": "These workorders could not create the delivery site.",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "split1": " pga att det finns aktiva ärenden på denna anläggning av typerna: ",
+      "subject": "Målerbytte mot WMS: Kunne ikke skape delivery-site."
+    }, {
+      "_id": "05",
+      "boolean": true,
+      "extra-keys": "CaseType",
+      "filteronError": "* group is not configured for case type*",
+      "function": "get-case-type",
+      "message": "These workorders have an unkown case type",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "split1": " group is not configured for case type ",
+      "subject": "Målerbytte mot WMS: Ukjent case-type."
+    }, {
+      "_id": "06",
+      "boolean": true,
+      "extra-keys": "CounterCodes",
+      "filteronError": "* Cannot find any function that applies to counter codes*",
+      "function": "get-CounterCodes",
+      "message": "These workorders don't have a known function for their counter codes.",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "split1": " Cannot find any function that applies to counter codes: ",
+      "subject": "Målerbytte mot WMS: Ukjent funksjon for counter-code."
+    }, {
+      "_id": "07",
+      "boolean": true,
+      "filteronError": "*Cannot update errand, its status is : *",
+      "message": "These errand updates have an invalid status.",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Målerbytte mot WMS: Feil status."
+    }, {
+      "_id": "08",
+      "boolean": true,
+      "filteronError": "*Request doesn't contain current delivery site's meter*",
+      "message": "These request don't contain the delivery site meterpoint.",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Målerbytte mot WMS: Mangler delivery-site målepunkt."
+    }, {
+      "_id": "09",
+      "boolean": true,
+      "filteronError": "*Error when updating meter change errand*",
+      "message": "These workorders got the error 'Error when updating meter change errand'",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "subject": "Målerbytte mot WMS: Feil med oppdatering av måler-bytte errende."
+    }]
+  },
+  "transform": {
+    "type": "dtl",
+    "rules": {
+      "default": [
+        ["copy",
+          ["list", "message", "subject", "receivers"]
+        ],
+        ["add", "keys",
+          ["filter",
+            ["is-not-null", "_."],
+            ["union",
+              ["list", "WO", "MP", "Errandid", "ErrandStatus", "ErrandTypeId", "Meters", "ReadingMethod", "SettlementMethod", "Error-TS"],
+              ["list", "_S.extra-keys"]
+            ]
+          ]
+        ],
+        ["add", "errors",
+          ["apply-hops", "getValuableData", {
+            "datasets": ["system:dead-letter:replacement-done-workorder-wms-endpoint dlrdww"],
+            "where": ["eq", "dlrdww.dead", "_S.boolean"],
+            "track-dependencies": "$ENV(dependency)"
+          }]
+        ],
+        ["filter",
+          ["neq", 0,
+            ["count", "_T.errors"]
+          ]
+        ],
+        ["add", "endmessage",
+          ["concat", "Amount of workorders in this list: ",
+            ["string",
+              ["count", "_T.errors"]
+            ]
+          ]
+        ],
+        ["remove", "tmp_*"]
+      ],
+      "getValuableData": [
+        ["filter",
+          ["and",
+            ["matches", "_P._S.filteronError", "_S.original_error_message"],
+            ["lte",
+              ["datetime-diff", "hour",
+                ["now"],
+                ["datetime",
+                  ["multiply", 1000, "_S._ts"]
+                ]
+              ], 24]
+          ]
+        ],
+        ["add", "WO", "_S._id"],
+        ["add", "MP", "_S.entity.Payload.DeliverySite.DeliverySiteId"],
+        ["add", "Meters", "_S.entity.Payload.DeliverySite.MeterArray.MeterId"],
+        ["add", "SettlementMethod", "_S.entity.Payload.DeliverySite.SettlementMethod"],
+        ["add", "ReadingMethod", "_S.entity.Payload.DeliverySite.ReadingMethod"],
+        ["add", "ErrandTypeId", "_S.entity.Payload.ErrandTypeId"],
+        ["add", "ErrandId", "_S.entity.Payload.ErrandId"],
+        ["add", "ErrandStatus", "_S.entity.Payload.ErrandStatus"],
+        ["add", "Error-TS",
+          ["datetime-format", "%Y-%m-%dT%H:%M:%SZ",
+            ["datetime",
+              ["multiply", 1000, "_S._ts"]
+            ]
+          ]
+        ],
+        ["comment", "if there are extra values to add, then do so."],
+        ["if",
+          ["is-not-null", "_P._S.extra-keys"],
+          [
+            ["add", "tmp_value",
+              ["substring", 0, -3,
+                ["last",
+                  ["split", "_P._S.split1", "_S.original_error_message"]
+                ]
+              ]
+            ],
+            ["if",
+              ["gt",
+                ["length", "_T.tmp_value"], 60],
+              ["add", "_P._S.extra-keys", "string-too-long"],
+              ["add", "_P._S.extra-keys", "_T.tmp_value"]
+            ],
+            ["remove", "tmp_*"]
+          ]
+        ]
+      ]
+    }
+  },
+  "metadata": {
+    "$config-group": "maintenance",
+    "author": "Gabriell",
+    "tags": ["email"]
+  }
+}
