@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 unset GIT_DIR
-echo "RUNNING GIT COMMIT"
+
 # get state
 git_root=$(git rev-parse --show-toplevel)
 node_root=$git_root/node
@@ -31,7 +31,7 @@ fi
 ###### automatic whitelist maintenance######
 cd $node_root
 
-#stop if any whitelist file is among the unstaged files
+ #stop if any whitelist file is among the unstaged files
 unstaged_whitelist_count=`git diff --name-only deployment/whitelist-* | wc -l`
 if [ $unstaged_whitelist_count -gt 0 ];then
   printf "\033[0;31mGIT-HOOK:\n\tChages to whitelists must be staged or reset!\033[0m\n"
@@ -69,7 +69,7 @@ for wl in `ls deployment/whitelist-*.txt`;do
   sort -d $wl | uniq > $wl.tmp && mv $wl.tmp $wl
 done;
 
- if whitelist-master has a diff and it is not fully updated after added/removed configs, notify user
+# if whitelist-master has a diff and it is not fully updated after added/removed configs, notify user
 git --no-pager diff --exit-code deployment/whitelist-master.txt &> /dev/null
 
 if [ "$?" -ne "0" ];then
