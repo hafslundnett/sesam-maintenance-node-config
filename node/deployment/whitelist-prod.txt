@@ -16,6 +16,7 @@ pipes/debug-tilknytning-req-wms-orgno-emailsender.conf.json
 pipes/elsmart-product-change-emailsender.conf.json
 pipes/emailsender-tilknytning-missing-orgno.conf.json
 pipes/ifs-meterpoint-related-workorders.conf.json
+pipes/ifs-workorder-role-manual-query.conf.json
 pipes/installed-quant-assets.conf.json
 pipes/installed-quant-assets-endpoint.conf.json
 pipes/installed-quant-communicationpoint-assets.conf.json

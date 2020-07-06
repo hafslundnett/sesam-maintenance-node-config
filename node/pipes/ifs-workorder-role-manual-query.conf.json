@@ -1,0 +1,40 @@
+{
+  "_id": "ifs-workorder-role-manual-query",
+  "type": "pipe",
+  "source": {
+    "type": "sql",
+    "system": "ifs",
+    "blacklist": ["objid", "objversion", "objkey", "duplicate_type", "operation_source", "scheduled_status", "work_order_invoice_type", "state", "updated", "log_timestamp"],
+    "is_chronological": true,
+    "primary_key": ["row_no", "wo_no"],
+    "query": "SELECT wor.*, nvl(hl.time_stamp, TO_TIMESTAMP('1900-01-01 00:00:00', 'yyyy-mm-dd hh24:mi:ss')) AS log_timestamp FROM IFSAPP.work_order_role wor LEFT JOIN ifsapp.history_log hl ON hl.TABLE_NAME = 'WORK_ORDER_ROLE_TAB' AND hl.keys = 'ROW_NO=' || wor.row_no || '^WO_NO=' || wor.wo_no || '^' WHERE wor.wo_no IN ('REPLACE_ME') ORDER BY log_timestamp"
+  },
+  "transform": {
+    "type": "dtl",
+    "rules": {
+      "default": [
+        ["copy", "*"],
+        ["add", "rdf:type",
+          ["ni", "ifs:Workorder-role"]
+        ],
+        ["add", "wo_no-ni",
+          ["ni", "ifs-workorder",
+            ["string",
+              ["integer", "_S.wo_no"]
+            ]
+          ]
+        ],
+        ["make-ni", "ifs-company", ":company"],
+        ["make-ni", "ifs-contract", ":contract"],
+        ["make-ni", "ifs-job", ":job_id"],
+        ["make-ni", "map-ifs-wo-role", ":c_column02"]
+      ]
+    }
+  },
+  "pump": {
+    "mode": "manual"
+  },
+  "metadata": {
+    "$config-group": "maintenance"
+  }
+}
