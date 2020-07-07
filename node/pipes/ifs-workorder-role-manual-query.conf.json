@@ -36,5 +36,9 @@
   },
   "metadata": {
     "$config-group": "maintenance"
+  },
+  "namespaces": {
+    "identity": "ifs-workorder-role",
+    "property": "ifs-workorder-role"
   }
 }
