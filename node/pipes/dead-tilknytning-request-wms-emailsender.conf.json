@@ -168,8 +168,8 @@
         }]
       }],
       "filteronError": "*1016Text:Error during the validation - *",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
-      "subject": "Tilknytning mot WMS: Validerings feil."
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no, nett.kundesenter@elvia.no",
+      "subject": "Auto-mail til 798: Tilknytning fra Elsmart til WMS - Validerings feil."
     }, {
       "_id": "Validation error for customer",
       "boolean": true,
