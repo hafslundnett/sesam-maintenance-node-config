@@ -39,7 +39,7 @@
       "boolean": true,
       "filteronError": "*is not set or out of given date bounds*",
       "message": "These workorders got the error: 'Validate value for techattr (some of them have specified 12.MP.131) is not set or out of given date bounds'",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@Hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@Hafslund.no, Kristoffer.Fylling.Vik@hafslund.no",
       "subject": "Tilknytning mot IFS: Verdi mangler eller er utenfor grensen"
     }, {
       "_id": "07",
