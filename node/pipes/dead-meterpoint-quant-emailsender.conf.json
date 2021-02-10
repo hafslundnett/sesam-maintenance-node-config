@@ -8,7 +8,7 @@
       "boolean": true,
       "filteronError": "* with active CommunicationPoints*",
       "message": "These meterpoint messages try to remove a distributionpoint with active communicationpoints. Quant has a different state than REMOVED for these meterpoints.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "shouldBeRemoved": true,
       "subject": "Målepunkt mot Quant: Fjerning av distribusjonspunkt med aktive kommunikasjonspunkter"
     }, {
@@ -17,7 +17,7 @@
       "extra-keys": "installed-assets",
       "filteronError": "*Remove assets before removal*",
       "message": "These distributionpoint messages try to remove a distributionpoint with installed assets.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "shouldBeRemoved": true,
       "subject": "Målepunkt mot Quant: Fjerning av distribusjonspunkt med installerte enheter."
     }, {
@@ -25,14 +25,14 @@
       "boolean": true,
       "filteronError": "*Data integrity violation*",
       "message": "These distributionpoint messages got the 'Data integrity violation' error.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målepunkt mot Quant: Data integritets feil"
     }, {
       "_id": "04",
       "boolean": true,
       "filteronError": "*MeterPoint not found*",
       "message": "These distributionpoint messages got the 'MeterPoint not found' error.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målepunkt mot Quant: Målerpunkt ikke funnet."
     }, {
       "_id": "05",
@@ -40,7 +40,7 @@
       "extra-keys": "DP Parent",
       "filteronError": "*Unknown DistributionPoint parent*",
       "message": "These distributionpoint messages has an unkown distributionpoint parent.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målepunkt mot Quant: Ukjent distribusjonspunkt foreldre"
     }, {
       "_id": "06",
@@ -48,7 +48,7 @@
       "extra-keys": ["Found Element", "Expected Element"],
       "filteronError": "*Invalid content was found starting with element '*",
       "message": "These distributionpoint messages have invalid content. The parsing of the error message gives us what was expected vs what was invalidly given.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "split1": "Invalid content was found starting with element '",
       "split2": "'. One of '{",
       "subject": "Målepunkt mot Quant: Gitt data stemmer ikke med forventet data."

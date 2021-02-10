@@ -6,7 +6,7 @@
     "entities": [{
       "_id": "M026",
       "message": "Disse arbeidsordrene angår M026 Høyspenning trafobytte og har hatt status WORKREQUEST i ifs de siste 24 timene",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Kristoffer.Fylling.Vik@hafslund.no, Vegard.Haukaas@hafslund.no, Ragnar.Maalen-Johansen@hafslund.no, roald.karlsen@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Kristoffer.Fylling.Vik@elvia.no, Vegard.Haukaas@elvia.no, Ragnar.Maalen-Johansen@elvia.no, roald.karlsen@elvia.no",
       "subject": "M026 Høyspenning AO skapelse/oppdatering.",
       "value": "~:map-elsmart-product:M026"
     }]

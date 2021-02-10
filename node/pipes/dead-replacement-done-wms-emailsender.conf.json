@@ -9,14 +9,14 @@
       "comment": "we should get these emails",
       "filteronError": "*Connection refused*",
       "message": "These workorders got the error: 'Connection refused'",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot WMS: Connection refused"
     }, {
       "_id": "02",
       "boolean": true,
       "filteronError": "*Error converting value *",
       "message": "These workorders have errandid set to null.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot WMS: Errandid mangler."
     }, {
       "_id": "03",
@@ -24,14 +24,14 @@
       "comment": "we should get these emails",
       "filteronError": "*Increase the timeout value passed to the call to*",
       "message": "These workorders timed out on their way from the pushreceiver.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot WMS: Timet ut på vei fra pushreceiver til WMS.."
     }, {
       "_id": "04",
       "boolean": true,
       "filteronError": "*Error when updating delivery site changes errand*",
       "message": "These workorders could not update the delivery site.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot WMS: Kunne ikke oppdatere delivery-site."
     }, {
       "_id": "041",
@@ -40,7 +40,7 @@
       "filteronError": "*Ärende kan ej skapas på anläggning*",
       "function": "get-errand-type",
       "message": "These workorders could not create the delivery site.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "split1": " pga att det finns aktiva ärenden på denna anläggning av typerna: ",
       "subject": "Målerbytte mot WMS: Kunne ikke skape delivery-site."
     }, {
@@ -50,7 +50,7 @@
       "filteronError": "* group is not configured for case type*",
       "function": "get-case-type",
       "message": "These workorders have an unkown case type",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "split1": " group is not configured for case type ",
       "subject": "Målerbytte mot WMS: Ukjent case-type."
     }, {
@@ -60,7 +60,7 @@
       "filteronError": "* Cannot find any function that applies to counter codes*",
       "function": "get-CounterCodes",
       "message": "These workorders don't have a known function for their counter codes.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "split1": " Cannot find any function that applies to counter codes: ",
       "subject": "Målerbytte mot WMS: Ukjent funksjon for counter-code."
     }, {
@@ -68,21 +68,21 @@
       "boolean": true,
       "filteronError": "*Cannot update errand, its status is : *",
       "message": "These errand updates have an invalid status.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot WMS: Feil status."
     }, {
       "_id": "08",
       "boolean": true,
       "filteronError": "*Request doesn't contain current delivery site's meter*",
       "message": "These request don't contain the delivery site meterpoint.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot WMS: Mangler delivery-site målepunkt."
     }, {
       "_id": "09",
       "boolean": true,
       "filteronError": "*Error when updating meter change errand*",
       "message": "These workorders got the error 'Error when updating meter change errand'",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot WMS: Feil med oppdatering av måler-bytte errende."
     }]
   },

@@ -7,7 +7,7 @@
       "_id": "elsmart missing orgno",
       "boolean": false,
       "message": "Workorders from elsmart received without fodselsnummer.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no, Kristoffer.Fylling.Vik@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no, Kristoffer.Fylling.Vik@elvia.no",
       "subject": "(PowelID:147670) (D88514) AOer som mangler fødselsnummer"
     }]
   },
