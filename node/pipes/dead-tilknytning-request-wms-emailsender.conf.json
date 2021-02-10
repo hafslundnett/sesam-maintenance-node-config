@@ -19,26 +19,26 @@
       }],
       "filteronError": "*Error type: SEVERE, code: 0*",
       "message": "Disse arbeidsordrene har fått en ukjent feil. Teksten fra feilen er medlagt i tabellen.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot WMS: Feilkode 0"
     }, {
       "_id": "Code 1000: Can't update DP",
       "boolean": true,
       "filteronError": "*Error type: SEVERE, code: 1000, text: Error when updating delivery site - Error when updating delivery site*",
       "message": "Disse arbeidsordrene har fått en ukjent feil. Teksten fra feilen er medlagt i tabellen.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot WMS: Kunne ikke oppdatere deliverysite"
     }, {
       "_id": "Code 1001: Can't create DP",
       "boolean": true,
       "filteronError": "*Error when creating delivery site - Error when creating delivery site*",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot WMS: Kunne ikke skape deliverysite"
     }, {
       "_id": "Code 1006: Error handling customer",
       "boolean": true,
       "filteronError": "*FAILED.Type:SEVERECode:1006Text:Error when handling customer - Error when handling customer*",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot WMS: Kunne ikke håndtere kundedata."
     }, {
       "_id": "Unkown Error when creating new delivery site",
@@ -58,7 +58,7 @@
         }]
       }],
       "filteronError": "*1009Text:Unknown error occurred when creating a new delivery site*",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot WMS: Feil ved skapelse av errende."
     }, {
       "_id": "Updating new delivery site",
@@ -76,13 +76,13 @@
         }]
       }],
       "filteronError": "*1010Text:Unknown error occurred when updating a new delivery site errand*",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot WMS: Ukjent feil ved skapelse av delivery site."
     }, {
       "_id": "Code 1011: Error when updating DP changes errand",
       "boolean": true,
       "filteronError": "*1011Text:Error when updating delivery site changes errand*",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot WMS: Feil ved oppdatering av delivery site"
     }, {
       "_id": "Code 1012: Error when creating DS changes errand",
@@ -124,7 +124,7 @@
         }]
       }],
       "filteronError": "*1012Text:Error when creating delivery site changes errand*",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot WMS: Feil ved skapelse av delivery site"
     }, {
       "_id": "Error code 1013: Missing fields for delivery site",
@@ -141,7 +141,7 @@
         }]
       }],
       "filteronError": "*1013Text:Error when validating fields for delivery site*",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot WMS: mangler felt for delivery site"
     }, {
       "_id": "Error code 1016: Validation errors values for delivery site",
@@ -168,7 +168,7 @@
         }]
       }],
       "filteronError": "*1016Text:Error during the validation - *",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no, nett.kundesenter@elvia.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no, nett.kundesenter@elvia.no",
       "subject": "Auto-mail til 798: Tilknytning fra Elsmart til WMS - Validerings feil."
     }, {
       "_id": "Validation error for customer",
@@ -195,7 +195,7 @@
         }]
       }],
       "filteronError": "*1017Text:Error during validation of the customer - *",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot WMS: Feil ved validering av kundedata"
     }, {
       "_id": "Error 1019: Active errand of same type exists",
@@ -212,19 +212,19 @@
         }]
       }],
       "filteronError": "*1019Text:Error active errand of the same type already exists for the delivery site -  *",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot WMS: Aktiv errende finnes allerede for deliverysite"
     }, {
       "_id": "Timeout",
       "boolean": true,
       "filteronError": "*The request channel timed out while waiting for a reply after*",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot WMS: Timet ut"
     }, {
       "_id": "No endpoint listening",
       "boolean": true,
       "filteronError": "*There was no endpoint listening at *",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot WMS: Ingen endepunkt som lytter"
     }, {
       "_id": "Unable to deserialize",
@@ -251,13 +251,13 @@
         }]
       }],
       "filteronError": "*Unable to deserialize string *",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot WMS: Feil ved omgjøring av streng data."
     }, {
       "_id": "Could not connect",
       "boolean": true,
       "filteronError": "*could not connect to the server*",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot WMS: Kunne ikke koble til server"
     }]
   },

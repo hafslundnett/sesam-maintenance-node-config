@@ -9,7 +9,7 @@
       "comment": "we should get these emails",
       "filteronError": "*Connection refused Connection refused*",
       "message": "These workorders got the error: 'Connection refused'",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@Hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot IFS: Connection refused"
     }, {
       "_id": "02",
@@ -17,7 +17,7 @@
       "comment": "someone from ifs should get these emails",
       "filteronError": "*probably because of unfinshed buisness on operations.*",
       "message": "These workorders could not be canceled. Probably because of unfinished business on operations.'",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@Hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot IFS: Uferdige operasjoner stopper kansellering."
     }, {
       "_id": "03",
@@ -25,21 +25,21 @@
       "comment": "someone from ifs should get these emails",
       "filteronError": "*from ELSMART is allready finished*",
       "message": "These workorders cannot be posted because they are already finished.'",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@Hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot IFS: Arbeidsordre allerede ferdig."
     }, {
       "_id": "04",
       "boolean": true,
       "filteronError": "*not defined*",
       "message": "Elsmart produktet disse arbeidsordrene bruker er ikke definert i IFS.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@Hafslund.no, Kristoffer.Fylling.Vik@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no, Kristoffer.Fylling.Vik@elvia.no",
       "subject": "Tilknytning mot IFS: Elsmart produkt udefinert i IFS"
     }, {
       "_id": "05",
       "boolean": true,
       "filteronError": "*is not set or out of given date bounds*",
       "message": "These workorders got the error: 'Validate value for techattr (some of them have specified 12.MP.131) is not set or out of given date bounds'",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@Hafslund.no, Kristoffer.Fylling.Vik@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no, Kristoffer.Fylling.Vik@elvia.no",
       "subject": "Tilknytning mot IFS: Verdi mangler eller er utenfor grensen"
     }, {
       "_id": "07",
@@ -47,7 +47,7 @@
       "extra-keys": "Current-State",
       "filteronError": "*is not allowed for Active Separate objects in state*",
       "message": "These workorders try to do an operation which is not allowed in the workorders current state.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@Hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "split1": "objects in state \\\"",
       "subject": "Tilknytning mot IFS: Operasjon ikke tillatt for AO'er i tilstand."
     }, {
@@ -55,21 +55,21 @@
       "boolean": true,
       "filteronError": "*Cancelled since all operations are not in New, Released or Cancelled states*",
       "message": "These workorders cannot be cancelled because all operations are not in New, Released or Cancelled states",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@Hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot IFS: Kan ikke kanselleres."
     }, {
       "_id": "11",
       "boolean": true,
       "filteronError": "*has postings*",
       "message": "These workorders have postings",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@Hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot IFS: AOer har postings."
     }, {
       "_id": "12",
       "boolean": true,
       "filteronError": "*Object reference not set to an instance of an object*",
       "message": "These workorders got the error: 'Object reference not set to an instance of an object'",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@Hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Tilknytning mot IFS: Objekt referanse er ikke satt til et objekt."
     }]
   },

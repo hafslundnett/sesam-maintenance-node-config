@@ -18,7 +18,7 @@
       }],
       "filteronError": "*. Conflict with changes registered after provided installation time*",
       "message": "These workorders have one or more assets which conflict with changes made after the provided installation time.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot Quant: Enheter er i konflikt med forandring etter installasjons tidspunkt."
     }, {
       "_id": "02",
@@ -35,7 +35,7 @@
       }],
       "filteronError": "*not available for installation. Status: OPERATIONAL*",
       "message": "These workorders have one ore more assets which cannot be installed because they are currently in opration.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot Quant: Enheter kan ikke bli installert fordi de er i bruk."
     }, {
       "_id": "03",
@@ -52,7 +52,7 @@
       }],
       "filteronError": "*Cannot remove asset with serial number: *",
       "message": "These workorders try to remove one or more asset before it was installed",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot Quant: Enheter kan ikke fjernes før de er installert."
     }, {
       "_id": "04",
@@ -69,14 +69,14 @@
       }],
       "filteronError": "*Removed asset with AssetSerialNumber:*",
       "message": "These workorders try to remove one or more asset which are not installed.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot Quant: Enheter kan ikke fjernes uten å være installert."
     }, {
       "_id": "05",
       "boolean": true,
       "filteronError": "*Meter point *",
       "message": "These workorders are performed on meterpoints which do not exist and therefore don't accept changes.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot Quant: Målepunktet finnes ikke i Quant."
     }, {
       "_id": "06",
@@ -93,14 +93,14 @@
       }],
       "filteronError": "* because it conflicts with subsequent installation history for com point*",
       "message": "These workorders tried to install one ore more asset which has conflicts with the installation history of the communication point.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot Quant: Kan ikke installere enhet pga konflikt med installasjons historien på målepunktet."
     }, {
       "_id": "07",
       "boolean": true,
       "filteronError": "*must equal to or after the work completed timestamp*",
       "message": "These workorders have readings which were made before the workorder was completed.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot Quant: Avlesningen(e) er før arbeidsordren ble utført."
     }, {
       "_id": "08",
@@ -117,14 +117,14 @@
       }],
       "filteronError": "*Unable to handle asset with unknown serial number: *",
       "message": "These workorders have one or more assets with an unkown serial number.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot Quant: Ukjent serial-numer på enheten(e)."
     }, {
       "_id": "09",
       "boolean": true,
       "filteronError": "*Provided change date is earlier than the communication point creation date*",
       "message": "These workorders were completed before the communication point was created.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot Quant: Arbeidsordre utført før compoint ble skapt."
     }, {
       "_id": "10",
@@ -141,7 +141,7 @@
       }],
       "filteronError": "*does not support AMS, comtype is null*",
       "message": "These workorders have one ore mor asset which does not support AMS and has communication-type set to null.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot Quant: Enhet(er) som ikke støtter AMS og mangler kommunikasjons-type."
     }, {
       "_id": "11",
@@ -158,21 +158,21 @@
       }],
       "filteronError": "*Removed asset is connected to Meter: *",
       "message": "These workorders tried to remove one ore more asset which was not installed at the Meterpoint.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot Quant: Fjerning av enheter som ikke tilhører målepunktet."
     }, {
       "_id": "12",
       "boolean": true,
       "filteronError": "*error.meter.installation.trafo.required*",
       "message": "These workorders are missing a transformer.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot Quant: Mangler transformator."
     }, {
       "_id": "13",
       "boolean": true,
       "filteronError": "*Deviating transformationRatio in transformers*",
       "message": "these workorders have deviations in the transformationratio of the transformers.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot Quant: Avvik i transformasjons-ratioen til transformatorene."
     }, {
       "_id": "14",
@@ -189,7 +189,7 @@
       }],
       "filteronError": "*on compoint where conflicting asset is already installed*",
       "message": "these workorders try to install an asset which is already installed.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte->Quant: Innstalasjon av allerede installert asset."
     }, {
       "_id": "15",
@@ -206,14 +206,14 @@
       }],
       "filteronError": "*on compoint where conflicting asset is already installed*",
       "message": "these workorders try to install an asset which is already installed.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte->Quant: Innstalasjon av allerede installert asset."
     }, {
       "_id": "undefinedErrors",
       "boolean": true,
       "dontMatchOn": ["*. Conflict with changes registered after provided installation time*", "*not available for installation. Status: OPERATIONAL*", "*Cannot remove asset with serial number: *", "*Removed asset with AssetSerialNumber:*", "*Meter point *", "* because it conflicts with subsequent installation history for com point*", "*must equal to or after the work completed timestamp*", "*Unable to handle asset with unknown serial number: *", "*Provided change date is earlier than the communication point creation date*", "*does not support AMS, comtype is null*", "*Removed asset is connected to Meter: *", "*error.meter.installation.trafo.required*", "*Deviating transformationRatio in transformers*"],
       "message": "These workorders did not match on any errors we currently check for.",
-      "receivers": "Gabriell.Constantin.Vig@hafslund.no, Feng.Luan@hafslund.no",
+      "receivers": "Gabriell.Constantin.Vig@elvia.no, Feng.Luan@elvia.no",
       "subject": "Målerbytte mot Quant: Ukjent feil."
     }]
   },

@@ -11,7 +11,7 @@
     "type": "mail",
     "system": "emailsender",
     "body_template": "<html>{{ message}}<br></br><body><table><TR>{% for key in keys %}<TD>{{ key }}</TD>{% endfor %}</TR>{% for entity in errors %}<TR> {% for key in keys %}<TD>{{ entity[key] }}</TD>{% endfor %}</TR>{% endfor %}</table></body><br></br>{{ endmessage }}</html>",
-    "mail_from": "SesamMailSender@hafslund.no",
+    "mail_from": "SesamMailSender@elvia.no",
     "recipients_property": "receivers",
     "subject_template": "{{subject}}"
   },
