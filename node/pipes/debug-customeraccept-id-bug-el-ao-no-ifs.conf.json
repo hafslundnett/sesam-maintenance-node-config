@@ -1,0 +1,26 @@
+{
+  "_id": "debug-customeraccept-id-bug-el-ao-no-ifs",
+  "type": "pipe",
+  "source": {
+    "type": "dataset",
+    "dataset": "debug-customeraccept-id-bug-el-ao"
+  },
+  "transform": [{
+    "type": "dtl",
+    "rules": {
+      "default": [
+        ["filter",
+          ["and",
+            ["is-empty", "_S.debug-customeraccept-id-bug-el-ao:IFS-AO"],
+            ["is-not-empty", "_S.debug-customeraccept-id-bug-el-ao:el-AO"]
+          ]
+        ],
+        ["copy", "*"]
+      ]
+    }
+  }],
+  "metadata": {
+    "$config-group": "maintenance",
+    "tags": ["kortbetaling", "backup", "Eivind"]
+  }
+}

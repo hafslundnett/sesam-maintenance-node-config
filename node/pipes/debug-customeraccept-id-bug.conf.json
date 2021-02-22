@@ -1,0 +1,45 @@
+{
+  "_id": "debug-customeraccept-id-bug",
+  "type": "pipe",
+  "source": {
+    "type": "dataset",
+    "dataset": "global-invoicemain",
+    "subset": ["eq", "_S.rdf:type", "~:elsmart:InvoiceCustomerAccept"]
+  },
+  "transform": {
+    "type": "dtl",
+    "rules": {
+      "default": [
+        ["filter",
+          ["and",
+            ["in",
+              ["ni", "elsmart:InvoiceCustomerAccept"], "_S.rdf:type"]
+          ]
+        ],
+        ["copy", "_id"],
+        ["add", "AO-groups",
+          ["group-by",
+            ["length", "_."], "_S.payments.invoiceLines.erpReferenceNumber"]
+        ],
+        ["add", "documents", "_S.payments.documents"],
+        ["add", "valid-invoice",
+          ["in", "invoice",
+            ["path", "type", "_T.documents"]
+          ]
+        ],
+        ["add", "elsmart-invoice",
+          ["first", "_S.elsmart-invoice-customeraccept:payments.elsmart-invoice-customeraccept:invoiceNumber"]
+        ],
+        ["add", "elsmart-invoice-noprefix",
+          ["substring", 2, "_T.elsmart-invoice"]
+        ],
+        ["add", "elsmart-nmid", "_S.elsmart-invoice-customeraccept:nmId"],
+        ["add", "elsmart-offer", "_S.elsmart-invoice-customeraccept:offerNumber"]
+      ]
+    }
+  },
+  "metadata": {
+    "$config-group": "maintenance",
+    "tags": ["kortbetaling", "backup", "Eivind"]
+  }
+}
