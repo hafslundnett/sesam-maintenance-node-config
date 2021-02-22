@@ -1,11 +1,3 @@
-pipes/debug-customeraccept-id-bug.conf.json
-pipes/debug-customeraccept-id-bug-el-ao.conf.json
-pipes/debug-customeraccept-id-bug-el-ao-no-ifs.conf.json
-pipes/debug-customeraccept-id-bug-el-ao-no-ifs-endpoint.conf.json
-pipes/debug-customeraccept-id-bug-no-ao.conf.json
-pipes/debug-customeraccept-id-bug-no-ao-endpoint.conf.json
-pipes/debug-customeraccept-no-invoice.conf.json
-pipes/debug-customeraccept-no-invoice-endpoint.conf.json
 pipes/ifs-meterpoint-related-workorders.conf.json
 pipes/ifs-workorder-role-manual-query.conf.json
 pipes/installed-quant-assets.conf.json
