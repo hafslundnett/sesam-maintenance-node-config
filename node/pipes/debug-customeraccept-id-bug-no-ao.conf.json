@@ -1,0 +1,34 @@
+{
+  "_id": "debug-customeraccept-id-bug-no-ao",
+  "type": "pipe",
+  "source": {
+    "type": "dataset",
+    "dataset": "debug-customeraccept-id-bug"
+  },
+  "transform": {
+    "type": "dtl",
+    "rules": {
+      "default": [
+        ["filter",
+          ["and",
+            ["neq", "_S._deleted", true],
+            ["or",
+              ["and",
+                ["is-empty", "_S.debug-customeraccept-id-bug:AO-groups.32"],
+                ["is-not-empty", "_S.debug-customeraccept-id-bug:AO-groups.0"]
+              ],
+              ["is-empty",
+                ["keys", "_S.debug-customeraccept-id-bug:AO-groups"]
+              ]
+            ]
+          ]
+        ],
+        ["copy", "*"]
+      ]
+    }
+  },
+  "metadata": {
+    "$config-group": "maintenance",
+    "tags": ["kortbetaling", "backup", "Eivind"]
+  }
+}

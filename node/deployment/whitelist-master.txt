@@ -4,6 +4,14 @@ pipes/dead-meterpoint-quant-emailsender.conf.json
 pipes/dead-replacement-done-wms-emailsender.conf.json
 pipes/dead-tilknytning-request-ifs-emailsender.conf.json
 pipes/dead-tilknytning-request-wms-emailsender.conf.json
+pipes/debug-customeraccept-id-bug.conf.json
+pipes/debug-customeraccept-id-bug-el-ao.conf.json
+pipes/debug-customeraccept-id-bug-el-ao-no-ifs.conf.json
+pipes/debug-customeraccept-id-bug-el-ao-no-ifs-endpoint.conf.json
+pipes/debug-customeraccept-id-bug-no-ao.conf.json
+pipes/debug-customeraccept-id-bug-no-ao-endpoint.conf.json
+pipes/debug-customeraccept-no-invoice.conf.json
+pipes/debug-customeraccept-no-invoice-endpoint.conf.json
 pipes/debug-tilknytning-req-wms-orgno-emailsender.conf.json
 pipes/elsmart-product-change-emailsender.conf.json
 pipes/emailsender-tilknytning-missing-orgno.conf.json
